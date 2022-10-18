@@ -1,1 +1,1 @@
-export const homeTagName = "home-page";
+export const homeTagName = "home-feature";

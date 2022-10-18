@@ -1,1 +1,1 @@
-export const parametersTagName = "parameters-page";
+export const parametersTagName = "parameters-feature";

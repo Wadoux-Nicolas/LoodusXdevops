@@ -23,6 +23,12 @@ docker-compose exec node npm install
 docker-compose exec node npm start
 ```
 
+### Create a new feature or component
+
+```bash
+node bin/generator feature|component|f|c ComponentName
+```
+
 ### Docker Compose Services Shutdown
 
 ```bash

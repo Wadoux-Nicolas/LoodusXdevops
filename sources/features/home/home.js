@@ -23,4 +23,3 @@ function define(html) {
     }
     customElements.define(homeTagName, Home);
 }
-

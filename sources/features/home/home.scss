@@ -1,7 +1,7 @@
 @import "../../shared/assets/styles/themes/theme.scss";
+
 #home {
   @include themed() {
-    background: t(base0);
     color: t(base1);
   }
 }
