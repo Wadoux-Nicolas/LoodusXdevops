@@ -29,6 +29,12 @@ docker-compose exec node npm start
 node bin/generator feature|component|f|c ComponentName
 ```
 
+### Get help about the generator
+
+```bash
+node bin/generator -help
+```
+
 ### Docker Compose Services Shutdown
 
 ```bash
