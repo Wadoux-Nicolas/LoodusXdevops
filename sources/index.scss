@@ -1,7 +1,14 @@
+@import "./shared/assets/styles/themes/theme.scss";
+
 html, body {
     min-height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
-    background: #FCFCFC;
+    background-blend-mode: hard-light;
+
+    @include themed() {
+        background: t(dark-white) url("./shared/assets/images/background.svg") no-repeat;
+        background-size: cover;
+    }
 }
