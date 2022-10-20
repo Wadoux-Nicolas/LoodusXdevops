@@ -1,27 +1,108 @@
+@import "../../assets/styles/themes/theme.scss";
 #modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  @include theme() {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 
-  &.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
+    &.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
 
-  #modal-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    #modal-container {
+      background-color: themed(bg-color);
+      border-radius: 24px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      position: relative;
+      width: 80%;
+      max-width: 1200px;
+
+      #modal-close {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background-color: permanent(dark-grey);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        .icon-cross {
+          position: relative;
+          width: 18px;
+          height: 12px;
+
+          &:before,
+          &:after {
+            content: '';
+            position: absolute;
+            // container - the width of the line
+            top: calc((12px - 2px) / 2);
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: permanent(bg-color);
+            border-radius: 4px;
+          }
+
+          &:before {
+            transform: rotate(45deg);
+          }
+          &:after {
+            transform: rotate(-45deg);
+          }
+
+          span {
+            display: block;
+          }
+        }
+
+        &:hover,
+        &:focus {
+          transform: rotateZ(90deg);
+        }
+      }
+
+      #modal-header, #modal-content {
+        padding: 30px;
+      }
+
+      #modal-header {
+        min-height: 40px;
+        border-radius: 24px 24px 40% 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-color: themed(primary);
+        color: permanent(bg-color);
+
+        h1 {
+          font-weight: 700;
+          font-size: 28px;
+        }
+      }
+
+      #modal-content {
+        min-height: 200px;
+      }
+    }
   }
 }

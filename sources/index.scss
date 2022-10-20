@@ -1,14 +1,27 @@
 @import "./shared/assets/styles/themes/theme.scss";
 
-html, body {
-    min-height: 100vh;
-    width: 100vw;
+@font-face {
+    font-family: "Inter";
+    src: url("./shared/assets/fonts/Inter/Inter-Regular.ttf");
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-blend-mode: hard-light;
+    font-family: "Inter";
+}
 
-    @include themed() {
-        background: t(dark-white) url("./shared/assets/images/background.svg") no-repeat;
+html, body {
+    @include theme() {
+        min-height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background-blend-mode: hard-light;
+
+        color: themed(text-color);
+        background: themed(dark-white) url("./shared/assets/images/background.svg") no-repeat;
         background-size: cover;
     }
 }

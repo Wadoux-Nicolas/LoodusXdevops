@@ -59,9 +59,8 @@ function createComponent() {
 `@import "${scssImport}";
 
 #${formattedComponentName} {
-    @include themed() {
-        background: t(base0);
-        color: t(base1);
+    @include theme() {
+        // write your styles here
     }
 }`;
 

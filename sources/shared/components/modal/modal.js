@@ -13,8 +13,14 @@ function define(html) {
 
         connectedCallback() {
             this.innerHTML = html;
-            this.querySelector("#close").addEventListener("click", () => {
+            this.querySelector("#modal-close").addEventListener("click", () => {
                 closeModal();
+            });
+            // detect click outside modal
+            this.querySelector("#modal").addEventListener("click", (e) => {
+                if (e.target.id === "modal") {
+                    closeModal();
+                }
             });
         }
     }
