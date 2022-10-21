@@ -2,6 +2,7 @@ import "./home.scss"
 import {openModal} from "../../shared/components/modal/modal-helpers";
 import {parametersTagName} from "../parameters/parameters-helper";
 import {homeTagName} from "./home-helpers";
+import {calculatorTagName} from "../calculator/calculator-helpers";
 
 // read the home.html file to get it as a string
 fetch("features/home/home.html")
@@ -18,6 +19,9 @@ function define(html) {
             this.innerHTML = html;
             this.querySelector("#parameters").addEventListener("click", () => {
                 openModal(parametersTagName);
+            });
+            this.querySelector("#calculator").addEventListener("click", () => {
+                openModal(calculatorTagName);
             });
         }
     }

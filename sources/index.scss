@@ -10,6 +10,7 @@
     margin: 0;
     padding: 0;
     font-family: "Inter";
+    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -25,3 +26,5 @@ html, body {
         background-size: cover;
     }
 }
+
+@import "./shared/assets/styles/display.scss";
