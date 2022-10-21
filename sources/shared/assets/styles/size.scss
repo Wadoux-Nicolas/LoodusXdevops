@@ -1,0 +1,56 @@
+// 1rem = 16px
+
+@font-face {
+  font-family: "Inter_semi_bold";
+  src: url("shared/assets/fonts/Inter/Inter-SemiBold.ttf");
+}
+
+/*
+  60 px on figma
+*/
+.text1 {
+  font-size: clamp(1.8867rem, 1.7163rem + 0.7572vw, 2.625rem);
+}
+
+/*
+  40 px on figma
+*/
+.text2 {
+  font-size: clamp(1.2578rem, 1.1442rem + 0.5048vw, 1.75rem);
+  font-family: "Inter_semi_bold";
+}
+
+/*
+  36 px on figma
+*/
+.text3 {
+  font-size: clamp(1.125rem, 1.0212rem + 0.4615vw, 1.575rem);
+}
+
+/*
+  24 px on figma
+*/
+.text4 {
+  font-size: clamp(0.74rem, 0.6685rem + 0.3179vw, 1.05rem);
+}
+
+/*
+  20 px on figma
+*/
+.text5 {
+  font-size: clamp(0.6289rem, 0.5692rem + 0.2652vw, 0.8875rem);
+}
+
+/*
+  18 px on figma
+*/
+.text6 {
+  font-size: clamp(0.5625rem, 0.5106rem + 0.2308vw, 0.7875rem);
+}
+
+/*
+  14 px on figma
+*/
+.text7 {
+  font-size: clamp(0.4375rem, 0.3971rem + 0.1795vw, 0.6125rem);
+}

@@ -1,4 +1,4 @@
-@import "../../assets/styles/themes/theme.scss";
+@import "sources/shared/assets/styles/theme";
 #modal {
   @include theme() {
     position: fixed;
@@ -93,11 +93,6 @@
         text-align: center;
         background-color: themed(primary);
         color: permanent(bg-color);
-
-        h1 {
-          font-weight: 700;
-          font-size: 28px;
-        }
       }
 
       #modal-content {
