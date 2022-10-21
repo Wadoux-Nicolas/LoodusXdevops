@@ -43,10 +43,10 @@ function createComponent() {
     const createHtmlModal = () => {
         const html =
 `<section id="${formattedComponentName}">
-    <div id="header">
+    <div id="modal-header">
         <h1>${formattedComponentName}</h1>
     </div>
-    <div id="content">
+    <div id="modal-content">
         <p>${formattedComponentName} is working</p>
     </div>
 </section>
