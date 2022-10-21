@@ -1,0 +1,1 @@
+export const navbarTagName = "navbar-component";

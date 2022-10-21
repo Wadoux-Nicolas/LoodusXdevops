@@ -1,0 +1,7 @@
+@import "../../assets/styles/themes/theme.scss";
+
+#navbar {
+  @include theme() {
+
+  }
+}
