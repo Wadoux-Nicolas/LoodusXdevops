@@ -1,0 +1,50 @@
+@import "../../shared/assets/styles/themes/theme.scss";
+
+#calculator {
+    @include theme() {
+        text-align: center;
+        .calculator-container {
+            width: fit-content;
+            margin: auto;
+
+            #result {
+                width: 100%;
+                border-bottom: solid 1px themed(black-color);
+                text-align: right;
+                font-size: 28px;
+            }
+
+            .keypad {
+                button {
+                    border: 0;
+                    background: transparent;
+                    width: 40px;
+                    height: 40px;
+                    color: themed(text-color);
+                    cursor: pointer;
+                    font-size: 28px;
+                    font-weight: bold;
+
+                    &:last-child {
+                        color: themed(primary);
+                    }
+
+                    &.clear {
+                        color: themed(accent);
+                    }
+
+                    &.large {
+                        width: 80px;
+                    }
+
+                    &:active {
+                        background: rgb(0, 0, 0, 0.1);
+                    }
+                }
+
+            }
+
+
+        }
+    }
+}
