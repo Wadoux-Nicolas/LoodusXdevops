@@ -1,4 +1,4 @@
-@import "./shared/assets/styles/themes/theme.scss";
+@import "sources/shared/assets/styles/theme";
 
 @font-face {
     font-family: "Inter";
@@ -10,6 +10,7 @@
     margin: 0;
     padding: 0;
     font-family: "Inter";
+    font-size: 16px;
 }
 
 html, body {

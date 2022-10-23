@@ -1,4 +1,5 @@
-@import "../../shared/assets/styles/themes/theme.scss";
+@import "sources/shared/assets/styles/theme";
+@import "sources/shared/assets/styles/size";
 
 #parameters {
   @include theme() {
