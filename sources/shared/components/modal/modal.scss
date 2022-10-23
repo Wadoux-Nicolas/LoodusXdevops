@@ -27,6 +27,9 @@
       position: relative;
       width: 80%;
       max-width: 1200px;
+      @media (max-width: 500px) {
+        width: 90%;
+      }
 
       #modal-close {
         position: absolute;

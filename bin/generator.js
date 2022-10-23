@@ -28,7 +28,6 @@ function createComponent() {
     const classComponentName = componentName[0].toUpperCase() + componentName.slice(1);
     const dir = (dirType === 'f' || dirType === 'feature') ? 'features' : 'shared/components';
 
-    const scssImport = dir === 'features' ? '../../shared/assets/styles/themes/theme.scss' : '../../../shared/assets/styles/themes/theme.scss';
     const pathToComponent = path.join(__dirname, '..', 'sources', dir, formattedComponentName);
 
     const createHtml = () => {
@@ -44,7 +43,7 @@ function createComponent() {
         const html =
 `<section id="${formattedComponentName}">
     <div id="modal-header">
-        <h1>${formattedComponentName}</h1>
+        <h1 class="text2">${formattedComponentName}</h1>
     </div>
     <div id="modal-content">
         <p>${formattedComponentName} is working</p>
@@ -56,7 +55,7 @@ function createComponent() {
 
     const createScss = () => {
         const scss =
-`@import "${scssImport}";
+`@import "sources/shared/assets/styles/theme";
 
 #${formattedComponentName} {
     @include theme() {
