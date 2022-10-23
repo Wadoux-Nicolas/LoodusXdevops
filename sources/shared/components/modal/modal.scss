@@ -102,6 +102,8 @@
 
       #modal-content {
         min-height: 200px;
+        max-width: 100%;
+        overflow: auto;
       }
     }
   }

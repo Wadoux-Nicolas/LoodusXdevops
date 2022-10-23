@@ -1,3 +1,51 @@
+@import "./themes/theme.scss";
+
 .hidden {
-    display: none;
+  display: none;
+}
+
+.btn-primary, .btn-secondary {
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    background-position: center;
+    transition: background 0.8s;
+}
+
+.btn-primary {
+  @include theme() {
+    background-color: themed(primary);
+    color: themed(bg-color);
+
+    &:hover {
+      background: themed(primary) radial-gradient(circle, transparent 1%, themed(primary) 1%) center/15000%;
+    }
+
+    &:active {
+      background-color: unquote(themed(primary) + '50');
+      background-size: 100%;
+      transition: background 0s;
+    }
+  }
+}
+
+.btn-secondary {
+  @include theme() {
+    background-color: themed(bg-color);
+    color: themed(primary);
+    border: solid 2px themed(primary);
+
+    &:hover {
+      background: themed(bg-color) radial-gradient(circle, transparent 1%, themed(bg-color) 1%) center/15000%;
+    }
+
+    &:active {
+      background-color: unquote(themed(primary) + '50');
+      background-size: 100%;
+      transition: background 0s;
+    }
+  }
 }
