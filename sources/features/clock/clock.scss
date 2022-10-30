@@ -1,0 +1,7 @@
+@import "sources/shared/assets/styles/theme";
+
+#clock {
+    @include theme() {
+        // write your styles here
+    }
+}

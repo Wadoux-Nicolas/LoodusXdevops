@@ -3,6 +3,7 @@ import {openModal} from "../../shared/components/modal/modal-helpers";
 import {parametersTagName} from "../parameters/parameters-helper";
 import {homeTagName} from "./home-helpers";
 import {calculatorTagName} from "../calculator/calculator-helpers";
+import {clockTagName} from "../clock/clock-helpers";
 
 // read the home.html file to get it as a string
 fetch("features/home/home.html")
@@ -17,11 +18,14 @@ function define(html) {
 
         connectedCallback() {
             this.innerHTML = html;
-            this.querySelector("#parameters").addEventListener("click", () => {
+            this.querySelector("#parameters-button").addEventListener("click", () => {
                 openModal(parametersTagName);
             });
-            this.querySelector("#calculator").addEventListener("click", () => {
+            this.querySelector("#calculator-button").addEventListener("click", () => {
                 openModal(calculatorTagName);
+            });
+            this.querySelector("#clock-button").addEventListener("click", () => {
+                openModal(clockTagName);
             });
         }
     }

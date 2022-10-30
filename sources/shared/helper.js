@@ -23,3 +23,7 @@ export function vibrate(pattern = 20) {
         navigator.vibrate(pattern);
     }
 }
+
+export function local() {
+    return navigator.language;
+}
