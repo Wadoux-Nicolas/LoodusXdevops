@@ -4,7 +4,7 @@
   display: none;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-accent {
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -13,12 +13,17 @@
     padding: 12px 24px;
     background-position: center;
     transition: background 0.8s;
+
+    &.disabled {
+        opacity: 0.5;
+    }
 }
 
 .btn-primary {
   @include theme() {
     background-color: themed(primary);
     color: themed(bg-color);
+    border: solid 2px transparent;
 
     &:hover {
       background: themed(primary) radial-gradient(circle, transparent 1%, themed(primary) 1%) center/15000%;
@@ -26,6 +31,24 @@
 
     &:active {
       background-color: unquote(themed(primary) + '50');
+      background-size: 100%;
+      transition: background 0s;
+    }
+  }
+}
+
+.btn-accent {
+  @include theme() {
+    background-color: themed(accent);
+    color: themed(bg-color);
+    border: solid 2px transparent;
+
+    &:hover {
+      background: themed(accent) radial-gradient(circle, transparent 1%, themed(accent) 1%) center/15000%;
+    }
+
+    &:active {
+      background-color: unquote(themed(accent) + '50');
       background-size: 100%;
       transition: background 0s;
     }
@@ -49,3 +72,39 @@
     }
   }
 }
+
+// generate helper classes for margins and paddings
+$px: (0,5,10,15,20,25,30,35,40);
+@each $i in $px {
+  .m-#{$i} {
+    margin: $i'px';
+  }
+  .mt-#{$i} {
+    margin-top: $i+px;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i+px;
+  }
+  .ml-#{$i} {
+    margin-left: $i+px;
+  }
+  .mr-#{$i} {
+    margin-right: $i+px;
+  }
+  .p-#{$i} {
+    padding: $i+px;
+  }
+  .pt-#{$i} {
+    padding-top: $i+px;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i+px;
+  }
+  .pl-#{$i} {
+    padding-left: $i+px;
+  }
+  .pr-#{$i} {
+    padding-right: $i+px;
+  }
+}
+

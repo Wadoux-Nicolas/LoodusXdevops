@@ -1,4 +1,17 @@
 <section id="chronometer">
-    chronometer feature
+    <p>
+        <span class="text1" id="chronometer-minutes">00</span>
+        <span class="text1">:</span>
+        <span class="text1" id="chronometer-seconds">00</span>
+        <span class="text1">.</span>
+        <span class="text2" id="chronometer-milliseconds">00</span>
+    </p>
+    <div class="chronometer-actions">
+        <button class="btn-primary" id="chronometer-start">Démarrer</button>
+        <button class="btn-primary hidden" id="chronometer-unpause">Reprendre</button>
+        <button class="btn-accent hidden" id="chronometer-pause">Pause</button>
+        <button class="btn-accent hidden ml-20" id="chronometer-reset">Réinitialiser</button>
+        <button class="btn-secondary disabled ml-20" id="chronometer-tour">Tour</button>
+    </div>
 </section>
 <script src="chronometer.js" type="module"></script>
