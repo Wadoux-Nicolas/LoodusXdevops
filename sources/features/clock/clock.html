@@ -4,7 +4,18 @@
         <p id="clock-date" class="bold"></p>
     </div>
     <div id="modal-content">
-        <p>clock is working</p>
+        <chronometer-feature class="clock-feature"></chronometer-feature>
+        <stopwatch-feature class="clock-feature hidden"></stopwatch-feature>
+        <div class="actions">
+            <button class="tab-button active" data-target="chronometer-feature">
+                <i class="bi bi-clock-history"></i>
+                <span>Chronomètre</span>
+            </button>
+            <button class="tab-button" data-target="stopwatch-feature">
+                <i class="bi bi-stopwatch"></i>
+                <span>Minuteur</span>
+            </button>
+        </div>
     </div>
 </section>
 <script src="./clock.js" type="module"></script>

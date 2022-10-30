@@ -1,0 +1,7 @@
+@import "../../../shared/assets/styles/theme";
+
+#stopwatch {
+    @include theme() {
+        // write your styles here
+    }
+}

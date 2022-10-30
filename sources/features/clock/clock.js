@@ -20,10 +20,19 @@ function define(html) {
             return this.querySelector("#clock-time");
         }
 
+        get actions() {
+            return this.querySelectorAll(".tab-button");
+        }
+
+        get clockFeatures() {
+            return this.querySelectorAll(".clock-feature");
+        }
+
         connectedCallback() {
             this.innerHTML = html;
             this.displayDate();
             setInterval(() => this.displayDate(), 1000);
+            this.actions.forEach(button => button.addEventListener("click", () => this.onActionClick(button)));
         }
 
         displayDate() {
@@ -39,6 +48,13 @@ function define(html) {
             this.clockDate.innerHTML = `${day} <span class="text3">${dayNumber}</span> ${month}`;
             this.clockTime.innerHTML = `${hours}:${minutes}<span class="text4">:${seconds}</span>`;
 
+        }
+
+        onActionClick(button) {
+            this.actions.forEach(action => action.classList.remove("active"));
+            button.classList.add("active");
+            this.clockFeatures.forEach(feature => feature.classList.add("hidden"));
+            document.querySelector(button.getAttribute("data-target")).classList.remove("hidden");
         }
 
     }
