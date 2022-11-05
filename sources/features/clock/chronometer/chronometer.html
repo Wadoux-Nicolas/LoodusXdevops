@@ -6,12 +6,22 @@
         <span class="text1">.</span>
         <span class="text2" id="chronometer-milliseconds">00</span>
     </p>
+    <table id="tour-table" class="hidden">
+        <thead>
+            <tr>
+                <th>Tour</th>
+                <th>Temps global</th>
+                <th>Temps du tour</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
     <div class="chronometer-actions">
         <button class="btn-primary" id="chronometer-start">Démarrer</button>
         <button class="btn-primary hidden" id="chronometer-unpause">Reprendre</button>
         <button class="btn-accent hidden" id="chronometer-pause">Pause</button>
-        <button class="btn-accent hidden ml-20" id="chronometer-reset">Réinitialiser</button>
-        <button class="btn-secondary disabled ml-20" id="chronometer-tour">Tour</button>
+        <button class="btn-accent hidden" id="chronometer-reset">Réinitialiser</button>
+        <button class="btn-secondary disabled" id="chronometer-tour">Tour</button>
     </div>
 </section>
 <script src="chronometer.js" type="module"></script>

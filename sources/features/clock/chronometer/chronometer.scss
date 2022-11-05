@@ -8,6 +8,33 @@
 
     .chronometer-actions {
       margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 20px;
+      row-gap: 10px;
+      justify-content: center;
+    }
+
+    #tour-table {
+      margin-top: 20px;
+      text-align: center;
+      border-collapse: collapse;
+      border-spacing: 5px;
+
+      th {
+        margin-bottom: 10px;
+        padding: 10px;
+        font-weight: bold;
+        border-bottom: solid 1px themed(dark-white);
+      }
+
+      tbody {
+        &::before {
+          height: 10px;
+          display: table-row;
+          content: '';
+        }
+      }
     }
   }
 }
