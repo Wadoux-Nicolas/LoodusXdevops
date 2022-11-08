@@ -1,3 +1,3 @@
 export const parametersTagName = "parameters-feature";
 
-// Test commit verified by GitHub
+// Test commit verified
