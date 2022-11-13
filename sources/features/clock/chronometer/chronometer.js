@@ -51,7 +51,7 @@ function define(html) {
             this.chronometerUnpause.addEventListener("click", () => this.startChronometer(this.time));
             this.chronometerReset.addEventListener("click", () => this.resetChronometer());
             this.chronometerTour.addEventListener("click", () => {
-                if(!this.chronometerTour.classList.contains("disabled")) {
+                if(!this.chronometerTour.disabled) {
                     this.tourTable.classList.remove("hidden");
                     this.addTour();
                 }
@@ -76,6 +76,7 @@ function define(html) {
             this.chronometerPause.classList.remove("hidden");
             this.chronometerTour.classList.remove("hidden");
             this.chronometerTour.classList.remove("disabled");
+            this.chronometerTour.disabled = false;
             this.chronometerReset.classList.add("hidden");
         }
 
@@ -97,6 +98,7 @@ function define(html) {
             this.chronometerPause.classList.add("hidden");
             this.chronometerUnpause.classList.add("hidden");
             this.chronometerTour.classList.add("disabled");
+            this.chronometerTour.disabled = true;
             this.chronometerTour.classList.remove("hidden");
             this.chronometerReset.classList.add("hidden");
             this.tourTable.classList.add("hidden");

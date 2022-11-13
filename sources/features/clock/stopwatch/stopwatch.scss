@@ -2,6 +2,56 @@
 
 #stopwatch {
     @include theme() {
-        // write your styles here
+        #time-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .time-input-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .time-input {
+                    border: none;
+                    background: none;
+                    color: themed("text-color");
+                    width: 3ch;
+                    margin: 0 10px;
+                    text-align: center;
+                    -moz-appearance: textfield;
+                    &::-webkit-outer-spin-button,
+                    &::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                }
+
+                .time-input-with-dots {
+                    display: flex;
+                    align-items: center;
+                    .dots {
+                        font-size: 30px;
+                    }
+                }
+            }
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: 20px;
+            row-gap: 10px;
+            justify-content: center;
+        }
+
+        .arrow-button {
+            cursor: pointer;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     }
 }
