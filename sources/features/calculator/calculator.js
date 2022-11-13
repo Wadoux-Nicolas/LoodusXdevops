@@ -39,60 +39,98 @@ function define(html) {
             });
 
             this.keypadElement.querySelectorAll('button').forEach(button => {
-                button.addEventListener('click', () => this.handleCalculatorButtons(button));
+                button.addEventListener('click', () => this.handleCalculatorAction(button.getAttribute("data-action"), button.innerHTML));
             });
 
             this.querySelector('#remove-history').addEventListener('click', () => {
                 this.savedResults = [];
                 this.historyElement.innerHTML = '';
             });
+
+            // listen for key presses and if it's a number or operator, trigger the button click
+            document.addEventListener('keydown', (event) => {
+                const key = event.key;
+                this.handleKeyBoardInputs(key);
+            });
         }
 
-        handleCalculatorButtons(button) {
+        handleKeyBoardInputs(key) {
+            if (isFinite(key)) {
+                this.handleCalculatorAction('number', key);
+            } else if (key === 'Enter' || key === '=') {
+                this.handleCalculatorAction('equals');
+            } else if (key === 'Backspace') {
+                this.handleCalculatorAction('clear');
+            } else {
+                let keyConversion = {
+                    '(': 'parenthesis-open',
+                    ')': 'parenthesis-close',
+                    '±': 'plus-minus',
+                    '*': 'multiply',
+                    'Dead': 'power', // we can assume that Dead key in this calculator can be only power signs
+                    '/': 'divide',
+                    '÷': 'divide',
+                    '.': 'point',
+                    ',': 'point',
+                    '+': 'plus',
+                    '-': 'minus',
+                };
+                if (keyConversion.hasOwnProperty(key)) {
+                    this.handleCalculatorAction(keyConversion[key]);
+                }
+            }
+        }
+
+        handleCalculatorAction(action, number = 0) {
             vibrate();
             // if we had an error but still try to do something, clear the error
             this.operation = this.operation.replace('Error', '');
 
-            const action = button.getAttribute("data-action");
             switch (action) {
-                case "all-clear":
+                case 'all-clear':
                     this.operation = ''; // empty to be replaced with the first pressed button
                     break;
-                case "clear":
+                case 'clear':
                     this.operation = this.operation.slice(0, -1);
                     break;
-                case "parenthesis-open":
+                case 'parenthesis-open':
                     // autocomplete open ( with multiply
                     if (this.operation !== '' && isFinite(this.operation.at(-1))) {
                         this.operation += '*';
                     }
-                    this.operation += button.innerHTML;
+                    this.operation += '(';
                     break;
-                case "plusminus":
+                case 'plus-minus':
                     this.operation = this.getOperationWithSignOfLastNumberInverted();
                     break;
-                case "divide":
-                    this.operation += '/';
-                    break;
-                case "multiply":
-                    this.operation += '*';
-                    break;
-                case "point":
+                case 'point':
                     // autocomplete point with 0
                     if (this.operation === '') {
                         this.operation += '0';
                     }
-                    this.operation += button.innerHTML;
+                    this.operation += '.';
                     break;
-                case "equals":
+                case 'equals':
                     this.compute();
                     break;
-                case "power":
-                case "minus":
-                case "plus":
-                case "parenthesis-close":
-                case "number":
-                    this.operation += button.innerHTML;
+                case 'power':
+                case 'minus':
+                case 'plus':
+                case 'divide':
+                case 'multiply':
+                case 'parenthesis-close':
+                    let actionsToKeys = {
+                        'power': '^',
+                        'minus': '-',
+                        'plus': '+',
+                        'parenthesis-close': ')',
+                        'divide': '/',
+                        'multiply': '*',
+                    }
+                    this.operation += actionsToKeys[action];
+                    break;
+                case 'number':
+                    this.operation += number;
                     break;
             }
             this.updateResult();
