@@ -2,61 +2,58 @@ import "./clock.scss"
 import {clockTagName} from "./clock-helpers";
 import {local} from "../../shared/helper";
 
-fetch("features/clock/clock.html")
-    .then(response => response.text())
-    .then(html => define(html));
+class Clock extends HTMLElement {
+    constructor() {
+        super();
+    }
 
-function define(html) {
-    class Clock extends HTMLElement {
-        constructor() {
-            super();
-        }
+    get clockDate() {
+        return this.querySelector("#clock-date");
+    }
 
-        get clockDate() {
-            return this.querySelector("#clock-date");
-        }
+    get clockTime() {
+        return this.querySelector("#clock-time");
+    }
 
-        get clockTime() {
-            return this.querySelector("#clock-time");
-        }
+    get actions() {
+        return this.querySelectorAll(".tab-button");
+    }
 
-        get actions() {
-            return this.querySelectorAll(".tab-button");
-        }
+    get clockFeatures() {
+        return this.querySelectorAll(".clock-feature");
+    }
 
-        get clockFeatures() {
-            return this.querySelectorAll(".clock-feature");
-        }
+    async connectedCallback() {
+        await fetch("features/clock/clock.html")
+            .then(response => response.text())
+            .then(html => this.innerHTML = html);
 
-        connectedCallback() {
-            this.innerHTML = html;
-            this.displayDate();
-            setInterval(() => this.displayDate(), 1000);
-            this.actions.forEach(button => button.addEventListener("click", () => this.onActionClick(button)));
-        }
+        this.displayDate();
+        setInterval(() => this.displayDate(), 1000);
+        this.actions.forEach(button => button.addEventListener("click", () => this.onActionClick(button)));
+    }
 
-        displayDate() {
-            const date = new Date();
+    displayDate() {
+        const date = new Date();
 
-            let day = date.toLocaleDateString(local(), { weekday: 'long' });
-            day = day.charAt(0).toUpperCase() + day.slice(1);
-            const dayNumber = date.getDate();
-            const month = date.toLocaleDateString(local(), { month: 'long' });
-            const hours = date.getHours().toString().padStart(2, "0");
-            const minutes = date.getMinutes().toString().padStart(2, "0");
-            const seconds = date.getSeconds().toString().padStart(2, "0");
-            this.clockDate.innerHTML = `${day} <span class="text3">${dayNumber}</span> ${month}`;
-            this.clockTime.innerHTML = `${hours}:${minutes}<span class="text4">:${seconds}</span>`;
-
-        }
-
-        onActionClick(button) {
-            this.actions.forEach(action => action.classList.remove("active"));
-            button.classList.add("active");
-            this.clockFeatures.forEach(feature => feature.classList.add("hidden"));
-            document.querySelector(button.getAttribute("data-target")).classList.remove("hidden");
-        }
+        let day = date.toLocaleDateString(local(), { weekday: 'long' });
+        day = day.charAt(0).toUpperCase() + day.slice(1);
+        const dayNumber = date.getDate();
+        const month = date.toLocaleDateString(local(), { month: 'long' });
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const seconds = date.getSeconds().toString().padStart(2, "0");
+        this.clockDate.innerHTML = `${day} <span class="text3">${dayNumber}</span> ${month}`;
+        this.clockTime.innerHTML = `${hours}:${minutes}<span class="text4">:${seconds}</span>`;
 
     }
-    customElements.define(clockTagName, Clock);
+
+    onActionClick(button) {
+        this.actions.forEach(action => action.classList.remove("active"));
+        button.classList.add("active");
+        this.clockFeatures.forEach(feature => feature.classList.add("hidden"));
+        document.querySelector(button.getAttribute("data-target")).classList.remove("hidden");
+    }
+
 }
+customElements.define(clockTagName, Clock);
