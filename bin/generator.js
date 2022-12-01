@@ -91,6 +91,7 @@ class ${classComponentName} extends HTMLElement {
         // Write your code here, it will be executed when the component is loaded
     }
 }
+
 customElements.define(${variableComponentName}, ${classComponentName});
 `;
 
