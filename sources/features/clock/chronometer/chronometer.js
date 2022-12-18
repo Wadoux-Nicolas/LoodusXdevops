@@ -56,6 +56,10 @@ class Chronometer extends HTMLElement {
         });
     }
 
+    disconnectedCallback() {
+        this.resetChronometer();
+    }
+
     startChronometer(previousTime = 0) {
         const chronometerMinutes = this.querySelector("#chronometer-minutes");
         const chronometerSeconds = this.querySelector("#chronometer-seconds");

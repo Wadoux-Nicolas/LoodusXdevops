@@ -113,9 +113,7 @@ customElements.define(${variableComponentName}, ${classComponentName});
     createJs();
 
     console.log(`Component ${componentName} created in ${pathToComponent}`);
-};
-
-
+}
 
 if(process.argv.includes('-h') || process.argv.includes('-help')) {
     showHelp();

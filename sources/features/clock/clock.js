@@ -3,6 +3,8 @@ import {clockTagName} from "./clock-helpers";
 import {local} from "../../shared/helper";
 
 class Clock extends HTMLElement {
+    dateInterval = null;
+
     constructor() {
         super();
     }
@@ -29,8 +31,12 @@ class Clock extends HTMLElement {
             .then(html => this.innerHTML = html);
 
         this.displayDate();
-        setInterval(() => this.displayDate(), 1000);
+        this.dateInterval = setInterval(() => this.displayDate(), 1000);
         this.actions.forEach(button => button.addEventListener("click", () => this.onActionClick(button)));
+    }
+
+    disconnectedCallback() {
+        clearInterval(this.dateInterval);
     }
 
     displayDate() {
@@ -45,7 +51,6 @@ class Clock extends HTMLElement {
         const seconds = date.getSeconds().toString().padStart(2, "0");
         this.clockDate.innerHTML = `${day} <span class="text3">${dayNumber}</span> ${month}`;
         this.clockTime.innerHTML = `${hours}:${minutes}<span class="text4">:${seconds}</span>`;
-
     }
 
     onActionClick(button) {

@@ -1,9 +1,12 @@
 import "./stopwatch.scss"
 import {stopwatchTagName} from "./stopwatch-helpers";
-import {_} from "../../../shared/helper";
+import {_, sendNotification, vibrate} from "../../../shared/helper";
+import stopwatchSound from "../../../shared/assets/sounds/stopwatch.mp3";
 
 class Stopwatch extends HTMLElement {
     interval = null;
+    vibrateInterval = null;
+    stopwatchAudio = null;
 
     constructor() {
         super();
@@ -48,9 +51,17 @@ class Stopwatch extends HTMLElement {
         this.getButton('pause').addEventListener("click", () => this.pause());
         this.getButton('restart').addEventListener("click", () => this.restart());
         this.getButton('cancel').addEventListener("click", () => this.reset());
+        this.getButton('stop-ring').addEventListener("click", () => this.stopRing());
         this.querySelectorAll('.arrow-button').forEach(button => {
             button.addEventListener("mousedown", () => this.arrowButtonClicked(button))
         });
+        this.stopwatchAudio = new Audio(stopwatchSound);
+        this.stopwatchAudio.loop = true;
+    }
+
+    disconnectedCallback() {
+        this.stopRing();
+        clearInterval(this.interval);
     }
 
     arrowButtonClicked(button) {
@@ -101,21 +112,11 @@ class Stopwatch extends HTMLElement {
     }
 
     start() {
-        let hours = parseInt(this.hoursInput.value);
-        let minutes = parseInt(this.minutesInput.value);
-        let seconds = parseInt(this.secondsInput.value);
-        let time = hours * 3600 + minutes * 60 + seconds;
-        this.interval = setInterval(() => {
-            time--;
-            if (time <= 0) {
-                this.stopWatchEnded();
-                return;
-            }
-            this.hoursInput.value = Math.floor(time / 3600).toString().padStart(2, "0");
-            this.minutesInput.value = Math.floor((time % 3600) / 60).toString().padStart(2, "0");
-            this.secondsInput.value = (time % 60).toString().padStart(2, "0");
-            this.progressBar.setAttribute('value', 30);
-        }, 1000);
+        const time = this.launchCounter();
+        this.stopRing();
+        this.progressBar.setAttribute('value', time);
+        this.progressBar.setAttribute('max', time);
+        this.progressBar.classList.remove('hidden');
         this.getButton('start').classList.add('hidden');
         this.getButton('pause').classList.remove('hidden');
         this.getButton('cancel').classList.remove('hidden');
@@ -125,8 +126,36 @@ class Stopwatch extends HTMLElement {
         this.querySelectorAll('.arrow-button').forEach(button => button.classList.add('hidden'));
     }
 
+    launchCounter() {
+        let hours = parseInt(this.hoursInput.value);
+        let minutes = parseInt(this.minutesInput.value);
+        let seconds = parseInt(this.secondsInput.value);
+        let time = hours * 3600 + minutes * 60 + seconds;
+        this.interval = setInterval(() => {
+            time--;
+            this.progressBar.setAttribute('value', time);
+            if (time <= 0) {
+                this.stopWatchEnded();
+                return;
+            }
+            this.hoursInput.value = Math.floor(time / 3600).toString().padStart(2, "0");
+            this.minutesInput.value = Math.floor((time % 3600) / 60).toString().padStart(2, "0");
+            this.secondsInput.value = (time % 60).toString().padStart(2, "0");
+        }, 1000);
+        return time;
+    }
+
     stopWatchEnded() {
-        // TODO add sound and vibration
+        this.getButton('stop-ring').classList.remove('hidden');
+
+        const pattern = [1000, 500]
+        const patternTime = pattern.reduce((a, b) => a + b);
+        vibrate(pattern);
+        this.vibrateInterval = setInterval(() => vibrate(pattern), patternTime);
+
+        this.stopwatchAudio.play();
+        sendNotification("Fin du chronomètre", { body: "Le chronomètre est fini !" });
+
         this.reset();
     }
 
@@ -137,7 +166,7 @@ class Stopwatch extends HTMLElement {
     }
 
     restart() {
-        this.start();
+        this.launchCounter();
         this.getButton('restart').classList.add('hidden');
         this.getButton('pause').classList.remove('hidden');
     }
@@ -156,7 +185,15 @@ class Stopwatch extends HTMLElement {
         this.getButton('pause').classList.add('hidden');
         this.getButton('cancel').classList.add('hidden');
         this.getButton('restart').classList.add('hidden');
+        this.progressBar.classList.add('hidden');
         this.querySelectorAll('.arrow-button').forEach(button => button.classList.remove('hidden'));
+    }
+
+    stopRing() {
+        this.getButton('stop-ring').classList.add('hidden');
+        clearInterval(this.vibrateInterval);
+        this.stopwatchAudio.pause();
+        this.stopwatchAudio.currentTime = 0;
     }
 }
 

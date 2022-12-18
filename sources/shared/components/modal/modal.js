@@ -1,5 +1,6 @@
 import './modal.scss';
 import {closeModal, modalTagName} from "./modal-helpers";
+import {vibrate} from "../../helper";
 
 
 class Modal extends HTMLElement {
@@ -13,11 +14,13 @@ class Modal extends HTMLElement {
             .then(html => this.innerHTML = html);
 
         this.querySelector("#modal-close").addEventListener("click", () => {
+            vibrate();
             closeModal();
         });
         // detect click outside modal
         this.querySelector("#modal").addEventListener("click", (e) => {
             if (e.target.id === "modal") {
+                vibrate();
                 closeModal();
             }
         });
