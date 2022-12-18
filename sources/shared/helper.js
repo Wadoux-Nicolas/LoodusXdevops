@@ -34,7 +34,7 @@ export function sendNotification(message, options = {}) {
     } else if (Notification.permission === "granted") {
         new Notification(message, options);
     } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission.then((permission) => {
+        Notification.requestPermission().then((permission) => {
             if (permission === "granted") {
                 new Notification(message, options);
             }
