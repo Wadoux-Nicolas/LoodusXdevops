@@ -4,10 +4,16 @@ import {parametersTagName} from "../parameters/parameters-helper";
 import {homeTagName} from "./home-helpers";
 import {calculatorTagName} from "../calculator/calculator-helpers";
 import {clockTagName} from "../clock/clock-helpers";
+import {ticTacToeTagName} from "../tic-tac-toe/tic-tac-toe-helpers";
 
 class Home extends HTMLElement {
+
     constructor() {
         super();
+    }
+
+    get home() {
+        return this.getElementById("home");
     }
 
     async connectedCallback() {
@@ -23,6 +29,9 @@ class Home extends HTMLElement {
         });
         this.querySelector("#clock-button").addEventListener("click", () => {
             openModal(clockTagName);
+        });
+        this.querySelector("#tic-tac-toe-button").addEventListener("click", () => {
+            openModal(ticTacToeTagName);
         });
     }
 }

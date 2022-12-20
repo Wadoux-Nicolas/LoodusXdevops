@@ -7,7 +7,7 @@ class Parameters extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("features/calculator/calculator.html")
+        await fetch("features/parameters/parameters.html")
             .then(response => response.text())
             .then(html => this.innerHTML = html);
     }

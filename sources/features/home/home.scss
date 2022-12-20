@@ -2,6 +2,62 @@
 
 #home {
   @include theme() {
+    #home-small-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
 
+      .tile {
+        width: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+
+        &:active {
+          opacity: 0.8;
+        }
+
+        .icon {
+          width: 60px;
+          height: 60px;
+          background-size: cover;
+        }
+        p {
+          margin-top: 5px;
+          color: permanent(bg-color);
+        }
+      }
+    }
+  }
+
+  .theme--light & {
+    #clock-button .icon {
+      background-image: url("../../shared/assets/images/clock.svg");
+    }
+    #tic-tac-toe-button .icon {
+      background-image: url("../../shared/assets/images/tic_tact_toe.svg");
+    }
+    #calculator-button .icon {
+      background-image: url("../../shared/assets/images/calculator.svg");
+    }
+    #parameters-button .icon {
+      background-image: url("../../shared/assets/images/settings.svg");
+    }
+  }
+
+  .theme--dark & {
+    #clock-button .icon {
+      background-image: url("../../shared/assets/images/clock-dark.svg");
+    }
+    #tic-tac-toe-button .icon {
+      background-image: url("../../shared/assets/images/tic_tact_toe-dark.svg");
+    }
+    #calculator-button .icon {
+      background-image: url("../../shared/assets/images/calculator-dark.svg");
+    }
+    #parameters-button .icon {
+      background-image: url("../../shared/assets/images/settings-dark.svg");
+    }
   }
 }

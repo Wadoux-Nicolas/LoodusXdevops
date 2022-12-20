@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="fr-FR">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="JavaScript">
+        <meta name="description" content="Loodus, votre nouveau OS">
         <meta name="theme-color" content="#ffffff">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <title>Loodus</title>
         <link rel="icon" href="./shared/assets/images/loodus.png" type="image/png">
+        <title>Loodus</title>
         <script src="https://polyfill.io/v3/polyfill.min.js"></script>
         <script type="module" src="./index.js"></script>
         <script src="./shared/components/progress-bar/progress-bar.js" type="module"></script>
         <script src="./features/home/home.js" type="module"></script>
+        <script src="./features/tic-tac-toe/tic-tac-toe.js" type="module"></script>
         <script src="./features/clock/clock.js" type="module"></script>
         <script src="./features/clock/chronometer/chronometer.js" type="module"></script>
         <script src="./features/clock/stopwatch/stopwatch.js" type="module"></script>
@@ -20,8 +21,13 @@
         <script src="./features/parameters/parameters.js" type="module"></script>
     </head>
     <body>
-        <button>Toggle mode</button>
-        <home-feature></home-feature>
-        <modal-component></modal-component>
+        <main>
+            <button>Toggle mode</button>
+            <home-feature></home-feature>
+            <modal-component></modal-component>
+        </main>
+        <footer>
+            <img src="./shared/assets/images/loodus_text.png" alt="Loodus" class="loodus-icon">
+        </footer>
     </body>
 </html>

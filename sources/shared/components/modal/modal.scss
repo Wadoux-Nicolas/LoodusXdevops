@@ -13,7 +13,6 @@
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
 
     &.is-open {
       opacity: 1;
