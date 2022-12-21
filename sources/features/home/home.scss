@@ -30,6 +30,7 @@ $clock-hours-hand-small-gap: 25px;
           width: 60px;
           height: 60px;
           background-size: cover;
+          filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.25));
         }
         p {
           margin-top: 5px;
@@ -77,6 +78,7 @@ $clock-hours-hand-small-gap: 25px;
             padding: 20px;
             cursor: pointer;
             position: relative;
+            filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.25));
 
             h2 {
               font-weight: bolder;
