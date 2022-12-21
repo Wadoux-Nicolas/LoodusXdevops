@@ -37,13 +37,34 @@ html, body {
             width: 100%;
             height: 50px;
             background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
 
             .loodus-icon {
                 width: 150px;
                 margin: 10px;
             }
-        }
 
+            #toggle-home-mode {
+                background: themed(bg-color);
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+
+                span {
+                    rotate: 90deg;
+                    font-weight: bolder;
+                    color: themed(text-color);
+                }
+            }
+        }
     }
 }
 

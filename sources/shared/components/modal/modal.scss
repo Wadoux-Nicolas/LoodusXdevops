@@ -13,10 +13,15 @@
     justify-content: center;
     opacity: 0;
     visibility: hidden;
+    cursor: pointer;
 
     &.is-open {
       opacity: 1;
       visibility: visible;
+    }
+
+    #modal-body {
+      cursor: auto;
     }
 
     #modal-container {

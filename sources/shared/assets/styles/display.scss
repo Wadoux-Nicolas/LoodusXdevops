@@ -1,7 +1,7 @@
 @import "sources/shared/assets/styles/theme";
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 // -------------- BUTTONS --------------
