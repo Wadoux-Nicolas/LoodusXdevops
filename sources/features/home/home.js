@@ -37,7 +37,7 @@ class Home extends HTMLElement {
 
         document.addEventListener('toggle-home-mode', (event) => {
             this.querySelector('#home-small-icons').classList.toggle('hidden');
-            this.querySelector('#home-big-icons').classList.toggle('hidden');
+            this.querySelector('#home-big').classList.toggle('hidden');
         });
 
         // Delay clock animation
