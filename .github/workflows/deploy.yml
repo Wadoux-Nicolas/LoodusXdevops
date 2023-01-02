@@ -28,4 +28,4 @@ jobs:
           **/.git*
           **/.git*/**
           **/node_modules/**
-          bin/
+          bin/**
