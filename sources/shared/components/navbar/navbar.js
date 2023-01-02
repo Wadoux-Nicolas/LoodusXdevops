@@ -8,75 +8,112 @@ class Navbar extends HTMLElement {
         super();
     }
 
+    get date() {
+        return this.querySelector("#date");
+    }
+
+    get time() {
+        return this.querySelector("#time");
+    }
+
+    get batteryLevel() {
+        return this.querySelector("#batteryLevel");
+    }
+
+    get batteryPercent() {
+        return this.querySelector("#batteryPercent");
+    }
+
+    get latenceLevel() {
+        return this.querySelector("#latenceLevel");
+    }
+
+    get networkIcon() {
+        return this.querySelector("#networkIcon");
+    }
+
+    get batteryInformations() {
+        return this.querySelector("#batteryInformations");
+    }
+
     async connectedCallback() {
         await fetch("shared/components/navbar/navbar.html")
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
-        this.querySelectorAll("#parameters").forEach(e => e.addEventListener("click", () => {
+        this.querySelector("#parameters").addEventListener("click", () => {
             openModal(parametersTagName);
-        }));
+        });
 
-        let date = new Date().toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long'});
-        date = date.charAt(0).toUpperCase() + date.slice(1);
+        this.setTime();
+        this.setDate();
+        this.setBatteryLevel();
+        this.setNetworkStatus();
+    }
 
-        document.getElementById("time").textContent = new Date().toLocaleString('fr-FR', {
+    setTime() {
+        this.time.textContent = new Date().toLocaleString('fr-FR', {
             hour: 'numeric',
             minute: 'numeric'
         })
+    }
 
-        checkWidth();
+    setDate() {
+        let date = new Date().toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long'});
+        date = date.charAt(0).toUpperCase() + date.slice(1);
+        this.checkWidth(date);
+        window.onresize = (event) => this.checkWidth(date);
+    }
 
-        function checkWidth() {
-            const width = window.innerWidth;
-            if (width < 425) {
-                let shortDate = date.split(' ').slice(0, -1).join(' ');
-                shortDate += " " + new Date().toLocaleString('fr-FR', { month: 'short' });
-                document.getElementById("date").textContent = shortDate;
-            }
-            else {
-                document.getElementById("date").textContent = date;
-            }
+    checkWidth(date) {
+        const width = window.innerWidth;
+        if (width < 425) {
+            let shortDate = date.split(' ').slice(0, -1).join(' ');
+            shortDate += " " + new Date().toLocaleString('fr-FR', { month: 'short' });
+            this.date.textContent = shortDate;
         }
-
-        window.onresize = checkWidth;
-
-        function updateBatteryStatus(battery) {
-            document.querySelector('#battery').textContent = Math.round(battery.level * 100) + "%";
-            document.querySelector('#batteryLevel').style.height = `${battery.level * 18}px`;
+        else {
+            this.date.textContent = date;
         }
+    }
 
+    setBatteryLevel() {
+        const navbarElement = this;
         navigator.getBattery()
             .then(function(battery) {
-                updateBatteryStatus(battery);
-
-                battery.onlevelchange = function () {
-                    updateBatteryStatus(battery);
-                };
+                navbarElement.updateBatteryLevel(battery);
+                    battery.onlevelchange = function () {
+                        navbarElement.updateBatteryLevel(battery);
+                    };
             })
             .catch(function(err) {
                 console.log(err);
             });
+    }
 
+    updateBatteryLevel(battery) {
+        this.batteryPercent.textContent = Math.round(battery.level * 100) + "%";
+        this.batteryLevel.style.height = `${battery.level * 18}px`;
+    }
+
+    setNetworkStatus() {
         const rtt = navigator.connection.rtt;
-
-        document.querySelector('#latenceLevel').textContent = rtt + "ms";
-
+        this.latenceLevel.textContent = rtt + "ms";
         switch (true) {
             case (rtt < 100): {
-                document.querySelector('#networkIcon').innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
+                this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
                 break;
             }
             case (rtt < 200): {
-                document.querySelector('#networkIcon').innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
+                this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
                 break;
             }
             case (rtt > 200): {
-                document.querySelector('#networkIcon').innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
+                this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
                 break;
             }
             default: {
-                document.querySelector('#networkIcon').innerHTML = `no data`;
+                this.networkIcon.innerHTML = `no data`;
             }
         }
     }

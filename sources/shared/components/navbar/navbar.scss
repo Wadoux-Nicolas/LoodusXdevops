@@ -70,7 +70,7 @@
       gap: 5px;
     }
 
-    #battery {
+    #batteryPercent {
       font-size: 12px;
       color: permanent(bg-color);
     }
@@ -98,7 +98,7 @@
       .material-icons {
         font-size: 20px;
       }
-      #latenceLevel, #battery {
+      #latenceLevel, #batteryPercent {
         font-size: 10px;
       }
       .batteryInformations, .network {
