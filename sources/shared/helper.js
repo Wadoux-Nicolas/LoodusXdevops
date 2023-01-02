@@ -41,3 +41,8 @@ export function sendNotification(message, options = {}) {
         });
     }
 }
+
+export function getUrl(url) {
+    const base = import.meta.env.DEV ? './' : '/sources/'
+    return `${base}${url}`;
+}

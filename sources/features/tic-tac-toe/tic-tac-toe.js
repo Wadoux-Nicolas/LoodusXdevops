@@ -1,5 +1,6 @@
 import "./tic-tac-toe.scss"
 import {ticTacToeTagName} from "./tic-tac-toe-helpers";
+import {getUrl} from "../../shared/helper";
 
 class TicTacToe extends HTMLElement {
     constructor() {
@@ -7,7 +8,7 @@ class TicTacToe extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("features/tic-tac-toe/tic-tac-toe.html")
+        await fetch(getUrl("features/tic-tac-toe/tic-tac-toe.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 

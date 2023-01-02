@@ -1,6 +1,6 @@
 import "./stopwatch.scss"
 import {stopwatchTagName} from "./stopwatch-helpers";
-import {_, sendNotification, vibrate} from "../../../shared/helper";
+import {_, getUrl, sendNotification, vibrate} from "../../../shared/helper";
 import stopwatchSound from "../../../shared/assets/sounds/stopwatch.mp3";
 
 class Stopwatch extends HTMLElement {
@@ -40,7 +40,7 @@ class Stopwatch extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("features/clock/stopwatch/stopwatch.html")
+        await fetch(getUrl("features/clock/stopwatch/stopwatch.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
