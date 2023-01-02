@@ -41,26 +41,28 @@ class Home extends HTMLElement {
             img.src = bobAvatar;
         });
 
-        document.addEventListener('toggle-home-mode', (event) => {
+        document.addEventListener('toggle-home-mode', () => {
             this.querySelector('#home-small-icons').classList.toggle('hidden');
-            this.querySelector('#home-big').classList.toggle('hidden');
+            const homeBig = this.querySelector('#home-big');
+            homeBig.classList.toggle('hidden');
+            if (!homeBig.classList.contains('hidden')) {
+                this.displayClock();
+            }
         });
 
-        // Delay clock animation
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const currentSeconds =  Math.round((now - today) / 1000);
-        const seconds = (currentSeconds / 60) % 1; // %1 is the decimal part, to get only seconds of the day
-        const minutes = (currentSeconds / 3600) % 1;
-        const hours = (currentSeconds / 43200) % 1;
-
-        this.setTime(60 * seconds, "second");
-        this.setTime(3600 * minutes, "minute");
-        this.setTime(43200 * hours, "hour");
-
+        this.displayClock();
         setInterval(() => {
             this.displayDay();
         }, 1000);
+    }
+
+    displayClock() {
+        // Delay clock animation
+        const now = new Date();
+
+        this.setTime(now.getSeconds(), "second");
+        this.setTime(now.getMinutes() * 60, "minute");
+        this.setTime(now.getHours() * 60 * 60, "hour");
     }
 
     setTime(left, hand) {
