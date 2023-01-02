@@ -7,6 +7,7 @@ class Stopwatch extends HTMLElement {
     interval = null;
     vibrateInterval = null;
     stopwatchAudio = null;
+    ringAnimation = null;
 
     constructor() {
         super();
@@ -57,6 +58,17 @@ class Stopwatch extends HTMLElement {
         });
         this.stopwatchAudio = new Audio(stopwatchSound);
         this.stopwatchAudio.loop = true;
+
+        this.ringAnimation = this.getButton('stop-ring').querySelector('i').animate([
+            {transform: 'rotate(0deg)'},
+            {transform: 'rotate(-10deg)'},
+            {transform: 'rotate(10deg)'},
+            {transform: 'rotate(0deg)'},
+        ], {
+            duration: 1000,
+            iterations: Infinity,
+        });
+        this.ringAnimation.pause();
     }
 
     disconnectedCallback() {
@@ -148,12 +160,13 @@ class Stopwatch extends HTMLElement {
     stopWatchEnded() {
         this.getButton('stop-ring').classList.remove('hidden');
 
-        const pattern = [1000, 500]
+        const pattern = [1000, 500];
         const patternTime = pattern.reduce((a, b) => a + b);
         vibrate(pattern);
         this.vibrateInterval = setInterval(() => vibrate(pattern), patternTime);
 
         this.stopwatchAudio.play();
+        this.ringAnimation.play();
         sendNotification("Fin du chronomètre", { body: "Le chronomètre est fini !" });
 
         this.reset();
@@ -193,6 +206,8 @@ class Stopwatch extends HTMLElement {
         this.getButton('stop-ring').classList.add('hidden');
         clearInterval(this.vibrateInterval);
         this.stopwatchAudio.pause();
+        this.ringAnimation.pause();
+
         this.stopwatchAudio.currentTime = 0;
     }
 }
