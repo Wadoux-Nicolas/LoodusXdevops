@@ -5,6 +5,9 @@
 */
 .text1 {
   font-size: clamp(1.89rem, 1.7192rem + 0.759vw, 2.63rem);
+  span {
+    font-size: clamp(1.89rem, 1.7192rem + 0.759vw, 2.63rem);
+  }
 }
 
 /*
@@ -12,6 +15,9 @@
 */
 .text2 {
   font-size: clamp(1.26rem, 1.1469rem + 0.5026vw, 1.75rem);
+  span {
+    font-size: clamp(1.26rem, 1.1469rem + 0.5026vw, 1.75rem);
+  }
 }
 
 /*
@@ -19,6 +25,9 @@
 */
 .text3 {
   font-size: clamp(1.13rem, 1.0262rem + 0.4615vw, 1.58rem);
+  span {
+    font-size: clamp(1.13rem, 1.0262rem + 0.4615vw, 1.58rem);
+  }
 }
 
 /*
@@ -26,6 +35,9 @@
 */
 .text4 {
   font-size: clamp(0.74rem, 0.6685rem + 0.3179vw, 1.05rem);
+  span {
+    font-size: clamp(0.74rem, 0.6685rem + 0.3179vw, 1.05rem);
+  }
 }
 
 /*
@@ -33,6 +45,9 @@
 */
 .text5 {
   font-size: clamp(0.63rem, 0.57rem + 0.2667vw, 0.89rem);
+  span {
+    font-size: clamp(0.63rem, 0.57rem + 0.2667vw, 0.89rem);
+  }
 }
 
 /*
@@ -40,6 +55,9 @@
 */
 .text6 {
   font-size: clamp(0.56rem, 0.5069rem + 0.2359vw, 0.79rem);
+  span {
+    font-size: clamp(0.56rem, 0.5069rem + 0.2359vw, 0.79rem);
+  }
 }
 
 /*
@@ -47,4 +65,11 @@
 */
 .text7 {
   font-size: clamp(0.44rem, 0.4008rem + 0.1744vw, 0.61rem);
+  span {
+    font-size: clamp(0.44rem, 0.4008rem + 0.1744vw, 0.61rem);
+  }
+}
+
+.bold {
+    font-weight: 700;
 }

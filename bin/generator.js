@@ -28,7 +28,6 @@ function createComponent() {
     const classComponentName = componentName[0].toUpperCase() + componentName.slice(1);
     const dir = (dirType === 'f' || dirType === 'feature') ? 'features' : 'shared/components';
 
-    const scssImport = dir === 'features' ? '../../shared/assets/styles/themes/theme.scss' : '../../../shared/assets/styles/themes/theme.scss';
     const pathToComponent = path.join(__dirname, '..', 'sources', dir, formattedComponentName);
 
     const createHtml = () => {
@@ -43,10 +42,10 @@ function createComponent() {
     const createHtmlModal = () => {
         const html =
 `<section id="${formattedComponentName}">
-    <div id="header">
-        <h1>${formattedComponentName}</h1>
+    <div id="modal-header">
+        <h1 class="text2">${formattedComponentName}</h1>
     </div>
-    <div id="content">
+    <div id="modal-content">
         <p>${formattedComponentName} is working</p>
     </div>
 </section>
@@ -56,7 +55,7 @@ function createComponent() {
 
     const createScss = () => {
         const scss =
-`@import "${scssImport}";
+`@import "sources/shared/assets/styles/theme";
 
 #${formattedComponentName} {
     @include theme() {
@@ -79,23 +78,22 @@ function createComponent() {
 `import "./${formattedComponentName}.scss"
 import {${variableComponentName}} from "./${formattedComponentName}-helpers";
 
-fetch("${dir}/${formattedComponentName}/${formattedComponentName}.html")
-    .then(response => response.text())
-    .then(html => define(html));
-
-function define(html) {
-    class ${classComponentName} extends HTMLElement {
-        constructor() {
-            super();
-        }
-
-        connectedCallback() {
-            this.innerHTML = html;
-            // Write your code here, it will be executed when the component is loaded
-        }
+class ${classComponentName} extends HTMLElement {
+    constructor() {
+        super();
     }
-    customElements.define(${variableComponentName}, ${classComponentName});
-}`;
+
+    async connectedCallback() {
+        await fetch("${dir}/${formattedComponentName}/${formattedComponentName}.html")
+            .then(response => response.text())
+            .then(html => this.innerHTML = html);
+
+        // Write your code here, it will be executed when the component is loaded
+    }
+}
+
+customElements.define(${variableComponentName}, ${classComponentName});
+`;
 
         fs.writeFileSync(path.join(pathToComponent, `${formattedComponentName}.js`), js);
     }
@@ -115,9 +113,7 @@ function define(html) {
     createJs();
 
     console.log(`Component ${componentName} created in ${pathToComponent}`);
-};
-
-
+}
 
 if(process.argv.includes('-h') || process.argv.includes('-help')) {
     showHelp();

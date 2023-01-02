@@ -1,0 +1,53 @@
+@import "sources/shared/assets/styles/theme";
+
+#clock {
+  @include theme() {
+    // write your styles here
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 40px;
+
+      .tab-button {
+        border: none;
+        padding: 12px 18px;
+        background: themed('bg-color');
+        color: themed('text-color');
+        border-radius: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 150px;
+        cursor: pointer;
+        transition: all 0.2s ease-in;
+
+        &.active {
+          background: themed('primary');
+          color: permanent('bg-color');
+        }
+
+        i {
+          font-size: 24px;
+          margin-bottom: 5px;
+        }
+
+      }
+    }
+
+    @include mobile-large {
+      .actions {
+        .tab-button {
+          padding: 8px 14px;
+
+          i {
+            font-size: 20px;
+          }
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}

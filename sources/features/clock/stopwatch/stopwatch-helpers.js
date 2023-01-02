@@ -1,0 +1,1 @@
+export const stopwatchTagName = "stopwatch-feature";

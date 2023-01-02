@@ -13,11 +13,15 @@
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    cursor: pointer;
 
     &.is-open {
       opacity: 1;
       visibility: visible;
+    }
+
+    #modal-body {
+      cursor: auto;
     }
 
     #modal-container {
@@ -27,6 +31,9 @@
       position: relative;
       width: 80%;
       max-width: 1200px;
+      @media (max-width: 500px) {
+        width: 90%;
+      }
 
       #modal-close {
         position: absolute;
@@ -97,6 +104,8 @@
 
       #modal-content {
         min-height: 200px;
+        max-width: 100%;
+        overflow: auto;
       }
     }
   }
