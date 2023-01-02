@@ -1,0 +1,67 @@
+$themes: (
+        dark: (
+                text-color: #FFFFFF,
+                bg-color: #333333,
+                black-color: #FFFFFF,
+                primary: #9292FF,
+                accent: #E32849,
+                dark-grey: #333333,
+                medium-grey: #666666,
+                light-grey: #999999,
+                dark-white: #D9D9D9,
+        ),
+        light: (
+                text-color: #000000,
+                bg-color: #FFFFFF,
+                black-color: #000000,
+                primary: #5F5BCC,
+                accent: #E32849,
+                dark-grey: #333333,
+                medium-grey: #666666,
+                light-grey: #999999,
+                dark-white: #D9D9D9,
+        ),
+);
+
+@mixin theme() {
+  @each $theme, $colors in $themes {
+    .theme--#{$theme} &, &.theme--#{$theme} {
+      $theme-map: () !global;
+      @each $name, $hex in $colors {
+        $theme-map: map-merge($theme-map, ($name: $hex)) !global;
+      }
+      @content;
+      //$theme-map: null !global;
+    }
+  }
+}
+
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
+
+@function permanent($key) {
+  @return map-get(map-get($themes, light), $key);
+}
+
+$breakpoints: (
+        tablet: 770px,
+        mobile-large: 425px,
+        mobile-small: 320px,
+);
+
+@mixin tablet {
+  @media (max-width: 770px) {
+    @content;
+  }
+}
+@mixin mobile-large {
+  @media (max-width: 425px) {
+    @content;
+  }
+}
+@mixin mobile-small {
+  @media (max-width: 320px) {
+    @content;
+  }
+}

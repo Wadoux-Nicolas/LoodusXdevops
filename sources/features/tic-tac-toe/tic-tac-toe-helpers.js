@@ -1,0 +1,1 @@
+export const ticTacToeTagName = "tic-tac-toe-feature";

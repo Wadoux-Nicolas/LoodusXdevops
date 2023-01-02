@@ -1,0 +1,21 @@
+<section id="clock">
+    <div id="modal-header">
+        <h1 class="text2 bold" id="clock-time"></h1>
+        <p id="clock-date" class="bold"></p>
+    </div>
+    <div id="modal-content">
+        <chronometer-feature class="clock-feature"></chronometer-feature>
+        <stopwatch-feature class="clock-feature hidden"></stopwatch-feature>
+        <div class="actions">
+            <button class="tab-button active" data-target="chronometer-feature">
+                <i class="material-icons">timer</i>
+                <span>Chronomètre</span>
+            </button>
+            <button class="tab-button" data-target="stopwatch-feature">
+                <i class="material-icons">av_timer</i>
+                <span>Minuteur</span>
+            </button>
+        </div>
+    </div>
+</section>
+<script src="./clock.js" type="module"></script>

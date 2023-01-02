@@ -1,0 +1,42 @@
+<section id="stopwatch">
+    <div id="time-selector">
+        <div class="time-input-container">
+            <label for="hours-input" class="mb-15"><span>Heures</span></label>
+            <i class="material-icons arrow-button" data-action="increase" data-target="hours-input">keyboard_arrow_up</i>
+            <input id="hours-input" class="time-input text1" type="number" pattern="[0-9]{2}" value="00" inputmode="numeric"
+                   min="0">
+            <i class="material-icons arrow-button" data-action="decrease" data-target="hours-input">keyboard_arrow_down</i>
+        </div>
+
+        <div class="time-input-container">
+            <label for="minutes-input" class="mb-15"><span>Minutes</span></label>
+            <i class="material-icons arrow-button" data-action="increase" data-target="minutes-input">keyboard_arrow_up</i>
+            <div class="time-input-with-dots">
+                <span class="dots">:</span>
+                <input id="minutes-input" class="time-input text1" type="number" pattern="[0-9]{2}" value="00"
+                       inputmode="numeric" min="0" max="59">
+                <span class="dots">:</span>
+            </div>
+            <i class="material-icons arrow-button" data-action="decrease" data-target="minutes-input">keyboard_arrow_down</i>
+        </div>
+
+        <div class="time-input-container">
+            <label for="seconds-input" class="mb-15"><span>Secondes</span></label>
+            <i class="material-icons arrow-button" data-action="increase" data-target="seconds-input">keyboard_arrow_up</i>
+            <input id="seconds-input" class="time-input text1" type="number" pattern="[0-9]{2}" value="00"
+                   inputmode="numeric" min="0" max="59">
+            <i class="material-icons arrow-button" data-action="decrease" data-target="seconds-input">keyboard_arrow_down</i>
+        </div>
+    </div>
+    <progress-bar-component min="0" max="100" value="100" is-reversed="true" class="hidden"></progress-bar-component>
+    <div class="actions">
+        <button class="btn-primary" id="start-stopwatch" disabled>Démarrer</button>
+        <button class="btn-accent hidden" id="pause-stopwatch">Pause</button>
+        <button class="btn-primary hidden" id="restart-stopwatch">Reprendre</button>
+        <button class="btn-secondary hidden" id="cancel-stopwatch">Annuler</button>
+        <button class="btn-secondary btn-pulsed hidden" id="stop-ring-stopwatch">
+            <i class="material-icons">notifications_off</i>
+        </button>
+    </div>
+</section>
+<script src="stopwatch.js" type="module"></script>

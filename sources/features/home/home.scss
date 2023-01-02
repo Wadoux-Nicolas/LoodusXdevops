@@ -1,0 +1,403 @@
+@import "sources/shared/assets/styles/theme";
+
+$clock-size: 200px;
+$small-clock-size: 120px;
+$clock-seconds-hand-gap: 15px;
+$clock-minutes-hand-gap: 25px;
+$clock-minutes-hand-small-gap: 15px;
+$clock-hours-hand-gap: 50px;
+$clock-hours-hand-small-gap: 25px;
+
+#home {
+  @include theme() {
+    #home-small-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      .tile {
+        width: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+
+        &:active {
+          opacity: 0.8;
+        }
+
+        .icon {
+          width: 60px;
+          height: 60px;
+          background-size: cover;
+          filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.25));
+        }
+        p {
+          margin-top: 5px;
+          color: permanent(bg-color);
+        }
+      }
+    }
+
+    #home-big {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 50px;
+      gap: 30px;
+      flex-wrap: wrap-reverse;
+
+      @media (max-width: 850px) {
+        padding: 0 20px;
+        justify-content: center;
+      }
+
+      .avatar {
+        width: 150px;
+        border-radius: calc(150px / 2);
+        background: unquote(themed(dark-white) + '80');
+      }
+
+      .avatar-name {
+        color: permanent(bg-color);
+        text-align: center;
+      }
+
+      #home-big-icons {
+        display: flex;
+        gap: 30px;
+
+        .column {
+          & > div:first-child {
+            margin-bottom: 30px;
+          }
+          .small-button, .big-button {
+            background: themed(bg-color);
+            width: 250px;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.25));
+
+            h2 {
+              font-weight: bolder;
+              text-align: center;
+              span {
+                color: themed(primary);
+              }
+            }
+          }
+          .small-button {
+            height: 200px;
+          }
+          .big-button {
+            height: 300px;
+          }
+          .big-button:first-child {
+            border-radius: 20px 75px 20px 20px;
+          }
+          .big-button:last-child {
+            border-radius: 20px 20px 20px 75px;
+          }
+        }
+
+        .parameters-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 75px;
+          display: flex;
+          gap: 12px;
+          flex-direction: column;
+          margin-top: 10px;
+
+          .parameters-bar {
+            display: block;
+            width: 100%;
+            height: 10px;
+            background: themed(text-color);
+            border-radius: 20px;
+            position: relative;
+
+            .parameters-bar-circle {
+              position: absolute;
+              top: 50%;
+              left: 0;
+              transform: translateY(-50%);
+              display: block;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              border: solid 4px themed(text-color);
+              background: themed(bg-color);
+            }
+          }
+
+          .parameters-bar {
+            &:nth-child(1) {
+              .parameters-bar-circle {
+                left: 10%;
+              }
+            }
+            &:nth-child(2) {
+              background: themed(primary);
+
+              .parameters-bar-circle {
+                border-color: themed(primary);
+                left: 70%;
+              }
+            }
+            &:nth-child(3) {
+              .parameters-bar-circle {
+                left: 30%;
+              }
+            }
+          }
+        }
+
+        .huge-tic-tac-toe {
+          width: 180px;
+          height: 180px;
+          margin: 24px auto auto;
+          background-size: cover;
+        }
+
+        .calculator-button {
+          h2 {
+            padding-bottom: 5px;
+            border-bottom: solid 1px themed(text-color);
+            width: 80%;
+            margin: auto auto 15px;
+          }
+
+          .calculator-row {
+            display: flex;
+            justify-content: center;
+
+            span {
+              text-align: center;
+              font-size: 16px;
+              width: 50px;
+              height: 30px;
+            }
+          }
+        }
+
+        .clock-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .clock {
+            position: relative;
+            width: $clock-size;
+            height: $clock-size;
+
+            #second-hand,
+            #minute-hand,
+            #hour-hand, .indicator {
+              position: absolute;
+              left: 50%;
+              width: 3px;
+              transform-origin: bottom center;
+              border-radius: 8px;
+            }
+
+            .hands-join {
+              position: absolute;
+              top: 50%;
+              left: calc(50% + 1.5px); // hand width / 2
+              transform: translate(-50%, -50%);
+              width: 14px;
+              height: 14px;
+              border-radius: 50%;
+              background: themed(bg-color);
+              border: solid 3px themed(text-color);
+            }
+
+            .indicator {
+              height: calc($clock-size / 2);
+              display: flex;
+              justify-content: center;
+            }
+
+            .indicator-dot {
+              height: 4px;
+              width: 4px;
+              border-radius: 50px;
+              background: themed(dark-white);
+            }
+
+            @for $i from 1 through 12 {
+              .indicator:nth-of-type(#{$i}) {
+                transform: rotateZ(calc(6deg * 5 * #{$i})); // 6deg * 5 because 360deg / 60 = 6 (*5 cause we want 12 indicators)
+                .indicator-number {
+                  height: fit-content;
+                  transform: rotateZ(calc(6deg * 5 * #{$i} * -1));
+                }
+              }
+            }
+
+            #second-hand {
+              height: calc(($clock-size / 2) - $clock-seconds-hand-gap);
+              width: 2px;
+              background: themed(medium-grey);
+              margin-top: $clock-seconds-hand-gap;
+              animation: turnHand 60s linear infinite; // 1 loop = 60 seconds, played infinitely, instead of using js
+            }
+            #minute-hand {
+              height: calc(($clock-size / 2) - $clock-minutes-hand-gap);
+              background: themed(text-color);
+              margin-top: $clock-minutes-hand-gap;
+              animation: turnHand 3600s linear infinite; // 60*60s (1 hour)
+            }
+            #hour-hand {
+              height: calc(($clock-size / 2) - $clock-hours-hand-gap);
+              background: themed(primary);
+              margin-top: $clock-hours-hand-gap;
+              animation: turnHand 43200s linear infinite; // 60*60*12s (12 hours)
+            }
+            @keyframes turnHand {
+              to {
+                transform: rotateZ(360deg);
+              }
+            }
+          }
+        }
+
+        #clock-date {
+          text-align: center;
+          margin-top: 20px;
+        }
+      }
+
+      @media (max-width: 575px) {
+        .avatar {
+          width: 100px;
+          border-radius: calc(100px / 2);
+        }
+
+        #home-big-icons {
+          gap: 10px;
+          .column {
+            & > div:first-child {
+              margin-bottom: 10px;
+            }
+            .small-button, .big-button {
+              width: 150px;
+              padding: 10px;
+            }
+            .small-button {
+              height: 100px;
+              border-radius: 15px;
+            }
+            .big-button {
+              height: 200px;
+            }
+            .big-button:first-child {
+              border-radius: 15px 45px 15px 15px;
+            }
+            .big-button:last-child {
+              border-radius: 15px 15px 15px 45px;
+            }
+          }
+
+          .parameters-icon {
+            width: 25px;
+            gap: 6px;
+
+            .parameters-bar {
+              height: 4px;
+              .parameters-bar-circle {
+                width: 10px;
+                height: 10px;
+                border: solid 2px themed(text-color);
+              }
+            }
+          }
+
+          .huge-tic-tac-toe {
+            width: 120px;
+            height: 120px;
+            margin: 14px auto auto;
+          }
+
+          .calculator-button {
+            h2 {
+              padding-bottom: 0;
+              margin: auto auto 5px;
+            }
+
+            .calculator-row {
+              span {
+                font-size: 10px;
+                width: 30px;
+                height: 12px;
+              }
+            }
+          }
+
+          .clock-button {
+            .clock {
+              width: $small-clock-size;
+              height: $small-clock-size;
+
+              .indicator {
+                height: calc($small-clock-size / 2);
+              }
+              #second-hand {
+                height: calc(($small-clock-size / 2) - $clock-seconds-hand-gap);
+              }
+              #minute-hand {
+                height: calc(($small-clock-size / 2) - $clock-minutes-hand-small-gap);
+                margin-top: $clock-minutes-hand-small-gap;
+              }
+              #hour-hand {
+                height: calc(($small-clock-size / 2) - $clock-hours-hand-small-gap);
+                margin-top: $clock-hours-hand-small-gap;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .theme--light & {
+    .clock-button .icon {
+      background-image: url("../../shared/assets/images/clock.svg");
+    }
+    .tic-tac-toe-button .icon {
+      background-image: url("../../shared/assets/images/tic_tac_toe.svg");
+    }
+    .calculator-button .icon {
+      background-image: url("../../shared/assets/images/calculator.svg");
+    }
+    .parameters-button .icon {
+      background-image: url("../../shared/assets/images/settings.svg");
+    }
+    .huge-tic-tac-toe {
+      background: url("../../shared/assets/images/tic_tac_toe-big.svg");
+    }
+  }
+
+  .theme--dark & {
+    .clock-button .icon {
+      background-image: url("../../shared/assets/images/clock-dark.svg");
+    }
+    .tic-tac-toe-button .icon {
+      background-image: url("../../shared/assets/images/tic_tac_toe-dark.svg");
+    }
+    .calculator-button .icon {
+      background-image: url("../../shared/assets/images/calculator-dark.svg");
+    }
+    .parameters-button .icon {
+      background-image: url("../../shared/assets/images/settings-dark.svg");
+    }
+    .huge-tic-tac-toe {
+      background: url("../../shared/assets/images/tic_tac_toe-big-dark.svg");
+    }
+  }
+}

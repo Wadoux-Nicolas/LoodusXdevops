@@ -1,0 +1,54 @@
+<section id="calculator">
+    <div id="modal-header">
+        <h1 class="text2">Calculette</h1>
+    </div>
+    <div id="modal-content">
+        <section id="calculator-container">
+            <div id="result">0</div>
+            <div id="keypad">
+                <div class="row smaller-buttons">
+                    <button data-action="power">^</button>
+                    <button data-action="parenthesis-open">(</button>
+                    <button data-action="parenthesis-close">)</button>
+                    <button data-action="divide">&divide;</button>
+                </div>
+                <div class="row">
+                    <button data-action="number">7</button>
+                    <button data-action="number">8</button>
+                    <button data-action="number">9</button>
+                    <button data-action="multiply">&times;</button>
+                </div>
+                <div class="row">
+                    <button data-action="number">4</button>
+                    <button data-action="number">5</button>
+                    <button data-action="number">6</button>
+                    <button data-action="minus">-</button>
+                </div>
+                <div class="row">
+                    <button data-action="number">1</button>
+                    <button data-action="number">2</button>
+                    <button data-action="number">3</button>
+                    <button data-action="plus">+</button>
+                </div>
+                <div class="row">
+                    <button data-action="number">0</button>
+                    <button data-action="plus-minus">&plusmn;</button>
+                    <button data-action="point">.</button>
+                    <button data-action="equals">=</button>
+                </div>
+                <div class="row">
+                    <button class="clear large" data-action="all-clear">AC</button>
+                    <button class="clear large" data-action="clear">C</button>
+                </div>
+            </div>
+            <button class="btn-secondary" id="history-toggle">Historique</button>
+        </section>
+        <section id="calculator-history-container" class="hidden">
+            <h2 class="text3 history-title">Historique <i class="material-icons" id='remove-history'>delete</i></h2>
+            <div id="history">
+
+            </div>
+        </section>
+    </div>
+</section>
+<script src="./calculator.js" type="module"></script>
