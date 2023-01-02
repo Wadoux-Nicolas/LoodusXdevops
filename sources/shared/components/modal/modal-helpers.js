@@ -14,6 +14,7 @@ export function openModal(componentName) {
 export function closeModal() {
     const modal = document.querySelector(modalTagName);
     const modalBody = modal?.querySelector("#modal-body");
+    modalBody.innerHTML = "";
 
     modal.querySelector("#modal").classList.remove("is-open");
 }

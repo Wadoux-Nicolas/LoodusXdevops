@@ -78,23 +78,22 @@ function createComponent() {
 `import "./${formattedComponentName}.scss"
 import {${variableComponentName}} from "./${formattedComponentName}-helpers";
 
-fetch("${dir}/${formattedComponentName}/${formattedComponentName}.html")
-    .then(response => response.text())
-    .then(html => define(html));
-
-function define(html) {
-    class ${classComponentName} extends HTMLElement {
-        constructor() {
-            super();
-        }
-
-        connectedCallback() {
-            this.innerHTML = html;
-            // Write your code here, it will be executed when the component is loaded
-        }
+class ${classComponentName} extends HTMLElement {
+    constructor() {
+        super();
     }
-    customElements.define(${variableComponentName}, ${classComponentName});
-}`;
+
+    async connectedCallback() {
+        await fetch("${dir}/${formattedComponentName}/${formattedComponentName}.html")
+            .then(response => response.text())
+            .then(html => this.innerHTML = html);
+
+        // Write your code here, it will be executed when the component is loaded
+    }
+}
+
+customElements.define(${variableComponentName}, ${classComponentName});
+`;
 
         fs.writeFileSync(path.join(pathToComponent, `${formattedComponentName}.js`), js);
     }
@@ -114,9 +113,7 @@ function define(html) {
     createJs();
 
     console.log(`Component ${componentName} created in ${pathToComponent}`);
-};
-
-
+}
 
 if(process.argv.includes('-h') || process.argv.includes('-help')) {
     showHelp();

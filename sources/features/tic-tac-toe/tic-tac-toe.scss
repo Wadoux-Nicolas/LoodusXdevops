@@ -1,0 +1,7 @@
+@import "sources/shared/assets/styles/theme";
+
+#tic-tac-toe {
+    @include theme() {
+        // write your styles here
+    }
+}

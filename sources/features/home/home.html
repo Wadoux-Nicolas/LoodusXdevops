@@ -1,7 +1,107 @@
 <section id="home">
-    <p>Home is working</p>
-    <button id="parameters-button">Open parameters</button>
-    <button id="calculator-button">Open calculator</button>
-    <button id="clock-button">Open clock</button>
+    <section id="home-small-icons">
+        <div class="tile clock-button">
+            <div class="icon"></div>
+            <p class="text5">Horloge</p>
+        </div>
+        <div class="tile tic-tac-toe-button">
+            <div class="icon"></div>
+            <p class="text5">Morpion</p>
+        </div>
+        <div class="tile calculator-button">
+            <div class="icon"></div>
+            <p class="text5">Calculette</p>
+        </div>
+        <div class="tile parameters-button">
+            <div class="icon"></div>
+            <p class="text5">Paramètres</p>
+        </div>
+    </section>
+    <section id="home-big" class="hidden">
+        <div>
+            <img class="avatar" src="../../shared/assets/images/bob.png" alt="Avatar de Bob">
+            <h2 class="avatar-name text2">BOB</h2>
+        </div>
+        <div id="home-big-icons">
+            <div class="column">
+                <div class="small-button calculator-button">
+                    <h2 class="text2">*** <span>€</span></h2>
+                    <div>
+                        <div class="calculator-row">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                        </div>
+                        <div class="calculator-row">
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                        </div>
+                        <div class="calculator-row">
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                        </div>
+                        <div class="calculator-row">
+                            <span>.</span>
+                            <span>0</span>
+                            <span>C</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="big-button tic-tac-toe-button">
+                    <h2 class="text2">T<span>i</span>cT<span>a</span>cTo<span>e</span></h2>
+                    <div class="huge-tic-tac-toe"></div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="big-button clock-button">
+                    <div>
+                        <div class="clock">
+                            <div id="second-hand"></div>
+                            <div id="minute-hand"></div>
+                            <div id="hour-hand"></div>
+                            <div class="hands-join"></div>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator">
+                        <span class="indicator-number">3</span>
+                    </span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator">
+                        <span class="indicator-number">6</span>
+                    </span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator">
+                        <span class="indicator-number">9</span>
+                    </span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator"><span class="indicator-dot"></span></span>
+                            <span class="indicator">
+                        <span class="indicator-number">12</span>
+                    </span>
+                        </div>
+                        <p id="clock-date"></p>
+                    </div>
+                </div>
+                <div class="small-button parameters-button">
+                    <h2 class="text2"><span>P</span>aramè<span>t</span>re<span>s</span></h2>
+                    <div class="parameters-icon">
+                    <span class="parameters-bar">
+                        <span class="parameters-bar-circle"></span>
+                    </span>
+                        <span class="parameters-bar">
+                        <span class="parameters-bar-circle"></span>
+                    </span>
+                        <span class="parameters-bar">
+                        <span class="parameters-bar-circle"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </section>
 <script src="./home.js" type="module"></script>
