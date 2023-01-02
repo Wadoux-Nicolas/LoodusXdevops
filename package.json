@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "vite build --base=./"
   },
   "devDependencies": {
     "sass": "^1.55.0",
