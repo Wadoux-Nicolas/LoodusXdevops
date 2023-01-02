@@ -1,6 +1,6 @@
 import "./calculator.scss"
 import {calculatorTagName} from "./calculator-helpers";
-import {_, vibrate} from "../../shared/helper";
+import {_, getUrl, vibrate} from "../../shared/helper";
 
 class Calculator extends HTMLElement {
     operation = '';
@@ -27,7 +27,7 @@ class Calculator extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("features/calculator/calculator.html")
+        await fetch(getUrl("features/calculator/calculator.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 

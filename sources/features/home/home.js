@@ -5,7 +5,8 @@ import {homeTagName} from "./home-helpers";
 import {calculatorTagName} from "../calculator/calculator-helpers";
 import {clockTagName} from "../clock/clock-helpers";
 import {ticTacToeTagName} from "../tic-tac-toe/tic-tac-toe-helpers";
-import {local} from "../../shared/helper";
+import {getUrl, local} from "../../shared/helper";
+import bobAvatar from "../../shared/assets/images/bob.png";
 
 class Home extends HTMLElement {
 
@@ -18,7 +19,8 @@ class Home extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("features/home/home.html")
+        // /sources ou .
+        await fetch(getUrl("features/home/home.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
@@ -34,6 +36,10 @@ class Home extends HTMLElement {
         this.querySelectorAll(".tic-tac-toe-button").forEach(e => e.addEventListener("click", () => {
             openModal(ticTacToeTagName);
         }));
+
+        this.querySelectorAll(".avatar").forEach(img => {
+            img.src = bobAvatar;
+        });
 
         document.addEventListener('toggle-home-mode', (event) => {
             this.querySelector('#home-small-icons').classList.toggle('hidden');

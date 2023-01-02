@@ -1,6 +1,6 @@
 import "./chronometer.scss"
 import {chronometerTagName} from "./chronometer-helpers";
-import {_} from "../../../shared/helper";
+import {_, getUrl} from "../../../shared/helper";
 
 
 class Chronometer extends HTMLElement {
@@ -41,7 +41,7 @@ class Chronometer extends HTMLElement {
     tours = [];
 
     async connectedCallback() {
-        await fetch("features/clock/chronometer/chronometer.html")
+        await fetch(getUrl("features/clock/chronometer/chronometer.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
         this.chronometerStart.addEventListener("click", () => this.startChronometer());

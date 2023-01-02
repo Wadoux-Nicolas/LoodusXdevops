@@ -1,6 +1,6 @@
 import "./clock.scss"
 import {clockTagName} from "./clock-helpers";
-import {local} from "../../shared/helper";
+import {getUrl, local} from "../../shared/helper";
 
 class Clock extends HTMLElement {
     dateInterval = null;
@@ -26,7 +26,7 @@ class Clock extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("features/clock/clock.html")
+        await fetch(getUrl("features/clock/clock.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 

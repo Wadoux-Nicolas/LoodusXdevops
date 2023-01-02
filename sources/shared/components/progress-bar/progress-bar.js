@@ -1,5 +1,6 @@
 import "./progress-bar.scss"
 import {progressBarTagName} from "./progress-bar-helpers";
+import {getUrl} from "../../helper";
 
 class ProgressBar extends HTMLElement {
     static get observedAttributes() {
@@ -36,7 +37,7 @@ class ProgressBar extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("shared/components/progress-bar/progress-bar.html")
+        await fetch(getUrl("shared/components/progress-bar/progress-bar.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
         this.updateProgress();
