@@ -2,6 +2,7 @@ import {navbarTagName} from "./navbar-helpers";
 import "./navbar.scss";
 import {openModal} from "../modal/modal-helpers";
 import {parametersTagName} from "../../../features/parameters/parameters-helper";
+import {getUrl} from "../../helper";
 
 class Navbar extends HTMLElement {
     constructor() {
@@ -32,12 +33,8 @@ class Navbar extends HTMLElement {
         return this.querySelector("#networkIcon");
     }
 
-    get batteryInformations() {
-        return this.querySelector("#batteryInformations");
-    }
-
     async connectedCallback() {
-        await fetch("shared/components/navbar/navbar.html")
+        await fetch(getUrl("shared/components/navbar/navbar.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
