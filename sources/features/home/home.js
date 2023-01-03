@@ -5,8 +5,7 @@ import {homeTagName} from "./home-helpers";
 import {calculatorTagName} from "../calculator/calculator-helpers";
 import {clockTagName} from "../clock/clock-helpers";
 import {ticTacToeTagName} from "../tic-tac-toe/tic-tac-toe-helpers";
-import {getUrl, local} from "../../shared/helper";
-import bobAvatar from "../../shared/assets/images/bob.png";
+import {getUrl, local, updateAvatar} from "../../shared/helper";
 
 class Home extends HTMLElement {
 
@@ -37,10 +36,6 @@ class Home extends HTMLElement {
             openModal(ticTacToeTagName);
         }));
 
-        this.querySelectorAll(".avatar").forEach(img => {
-            img.src = bobAvatar;
-        });
-
         document.addEventListener('toggle-home-mode', () => {
             this.querySelector('#home-small-icons').classList.toggle('hidden');
             const homeBig = this.querySelector('#home-big');
@@ -54,6 +49,8 @@ class Home extends HTMLElement {
         setInterval(() => {
             this.displayDay();
         }, 1000);
+
+        updateAvatar();
     }
 
     displayClock() {

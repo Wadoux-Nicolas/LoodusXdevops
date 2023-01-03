@@ -12,6 +12,7 @@
         <script type="module" src="./index.js"></script>
         <script src="./shared/components/progress-bar/progress-bar.js" type="module"></script>
         <script src="./features/home/home.js" type="module"></script>
+        <script src="./features/lock-screen/lock-screen.js" type="module"></script>
         <script src="./features/tic-tac-toe/tic-tac-toe.js" type="module"></script>
         <script src="./features/clock/clock.js" type="module"></script>
         <script src="./features/clock/chronometer/chronometer.js" type="module"></script>
@@ -20,11 +21,16 @@
         <script src="./shared/components/modal/modal.js" type="module"></script>
         <script src="./features/parameters/parameters.js" type="module"></script>
     </head>
-    <body>
+    <body class="is-locked">
         <main>
-            <button>Toggle mode</button>
-            <home-feature></home-feature>
-            <modal-component></modal-component>
+            <section id="home-unlocked">
+                <button>Toggle mode</button>
+                <home-feature></home-feature>
+                <modal-component></modal-component>
+            </section>
+            <section id="home-locked">
+                <lock-screen-feature></lock-screen-feature>
+            </section>
         </main>
         <footer>
             <img src="./shared/assets/images/loodus_text.png" alt="Loodus" class="loodus-icon">

@@ -1,4 +1,5 @@
 import './index.scss';
+import bobAvatar from "./shared/assets/images/bob.png";
 
 document.addEventListener("DOMContentLoaded", () => {
     const body = document.body;
@@ -32,5 +33,4 @@ document.addEventListener("DOMContentLoaded", () => {
         document.dispatchEvent(new CustomEvent('toggle-home-mode'));
         document.querySelectorAll('.toggle-home-mode-icon').forEach(e => e.classList.toggle('hidden'));
     });
-
 });

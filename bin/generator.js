@@ -77,7 +77,7 @@ function createComponent() {
         const js =
 `import "./${formattedComponentName}.scss"
 import {${variableComponentName}} from "./${formattedComponentName}-helpers";
-import {getUrl} from "../../helper";
+import {getUrl} from "../../shared/helper";
 
 class ${classComponentName} extends HTMLElement {
     constructor() {
@@ -85,7 +85,7 @@ class ${classComponentName} extends HTMLElement {
     }
 
     async connectedCallback() {
-        await fetch("getUrl(${dir}/${formattedComponentName}/${formattedComponentName}.html"))
+        await fetch(getUrl("${dir}/${formattedComponentName}/${formattedComponentName}.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 

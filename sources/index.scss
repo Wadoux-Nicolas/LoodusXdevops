@@ -69,3 +69,19 @@ html, body {
 }
 
 @import "./shared/assets/styles/display.scss";
+
+#home-locked {
+    display: none;
+}
+.is-locked {
+    background-blend-mode: luminosity !important;
+    #toggle-home-mode {
+        display: none !important;
+    }
+    #home-unlocked {
+        display: none !important;
+    }
+    #home-locked {
+        display: block;
+    }
+}
