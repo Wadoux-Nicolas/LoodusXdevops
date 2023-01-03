@@ -40,13 +40,9 @@
                 }
             }
         }
-
         #pattern-canvas {
             margin-top: 40px;
-            background: unquote(permanent(dark-white) + '20');
-            border-radius: 8px;
         }
-
         #error-code-message {
             color: permanent(bg-color);
         }

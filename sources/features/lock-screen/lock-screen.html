@@ -4,9 +4,9 @@
         <input type="password" placeholder="Mot de passe" id="unlock-password-input">
         <button type="submit"><i class="material-icons">arrow_right</i></button>
     </form>
-    <section id="unlock-by-pattern" class="hidden">
-        <canvas id="pattern-canvas" width="200" height="200"></canvas>
-    </section>
+    <div id="unlock-by-pattern" class="hidden">
+        <pattern-lock-component></pattern-lock-component>
+    </div>
     <p id="error-code-message" class="hidden">Oups ! Vous vous êtes trompé :(</p>
 </section>
 <script src="./lock-screen.js" type="module"></script>

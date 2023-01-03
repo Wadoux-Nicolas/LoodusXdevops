@@ -1,5 +1,4 @@
 import './index.scss';
-import bobAvatar from "./shared/assets/images/bob.png";
 
 document.addEventListener("DOMContentLoaded", () => {
     const body = document.body;
