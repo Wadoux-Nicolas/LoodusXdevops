@@ -7,6 +7,7 @@
             display: flex;
             flex-direction: column;
             gap: 50px;
+            position: relative;
 
             .game {
                 display: flex;
@@ -100,6 +101,10 @@
             cursor: not-allowed;
         }
 
+        .no-hover {
+            cursor: not-allowed;
+        }
+
         .board.o .cell:not(.o):not(.x):hover {
             background: radial-gradient(permanent(dark-grey) 60%, transparent 60%);
             opacity: 0.5;
@@ -123,6 +128,17 @@
 
         .cell:nth-child(7), .cell:nth-child(8), .cell:nth-child(9) {
             border-bottom: none;
+        }
+
+        .endGame {
+            border-radius: 20px;
+            background-color: themed(primary);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 50px;
+            color: themed(bg-color);
         }
 
     }

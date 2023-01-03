@@ -17,7 +17,7 @@ class Game extends HTMLElement {
 
     playerOneSymbol = "x";
     playerTwoSymbol = "o";
-    isPlayerOneTurn = true;
+    isPlayerTwoTurn = false;
 
     constructor() {
         super();
@@ -39,29 +39,46 @@ class Game extends HTMLElement {
         return this.querySelector(".player2");
     }
 
+    get initButton() {
+        return this.querySelector("#initGame");
+    }
+
+    get endGameButton() {
+        return this.querySelector("#endGame");
+    }
+
     async connectedCallback() {
         await fetch(getUrl("features/tic-tac-toe/game/game.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
+        this.onCellClick = this.onCellClick.bind(this);
+
         this.startGame();
+
+        this.initButton.addEventListener("click", () => {
+            this.startGame();
+        });
     }
 
     startGame() {
-        this.isPlayerOneTurn = true;
-        this.isPlayerOneTurn ? this.playerTwo.classList.toggle("opacity") : this.playerOne.classList.toggle("opacity");
+        this.isPlayerTwoTurn = false;
+        this.endGameButton.classList.add("hidden");
+        this.playerOne.classList.remove("opacity");
+        this.playerTwo.classList.remove("opacity");
+        this.playerTwo.classList.add("opacity");
         this.cells.forEach(cell => {
             cell.classList.remove(this.playerOneSymbol);
             cell.classList.remove(this.playerTwoSymbol);
-            cell.removeEventListener("click", event => this.onCellClick(event));
-            cell.addEventListener("click", event => this.onCellClick(event), {once: true});
+            cell.removeEventListener("click",  this.onCellClick, true);
+            cell.addEventListener("click", this.onCellClick, true);
         });
         this.setBoardHoverClass();
     }
 
     onCellClick(e) {
         const cell = e.target
-        const currentPlayerSymbol = this.isPlayerOneTurn ? this.playerOneSymbol : this.playerTwoSymbol;
+        const currentPlayerSymbol = this.isPlayerTwoTurn ? this.playerTwoSymbol : this.playerOneSymbol;
         this.placeSymbol(cell, currentPlayerSymbol);
         if (this.checkWin(currentPlayerSymbol)) {
             this.endGame(false);
@@ -81,10 +98,19 @@ class Game extends HTMLElement {
 
     endGame(draw) {
         if (draw) {
-            //personne a gagné
+            this.endGameButton.textContent = "Personne n'a gagné !";
+            this.endGameButton.classList.remove("hidden");
+
         } else {
-            // ${this.playerOneTurn ? this.playerOne : this.playerTwo} Wins!`
+            this.endGameButton.textContent = this.isPlayerTwoTurn ? "Bravo Joueur 2 !" : "Bravo Joueur 1 !";
+            this.endGameButton.classList.remove("hidden");
         }
+        this.cells.forEach(cell => {
+            cell.removeEventListener("click",  this.onCellClick, true);
+            cell.classList.add("no-hover");
+        });
+        this.board.classList.remove(this.playerOneSymbol);
+        this.board.classList.remove(this.playerTwoSymbol);
     }
 
     placeSymbol(cell, currentPlayerSymbol) {
@@ -92,7 +118,7 @@ class Game extends HTMLElement {
     }
 
     swapTurns() {
-        this.isPlayerOneTurn = !this.isPlayerOneTurn;
+        this.isPlayerTwoTurn = !this.isPlayerTwoTurn;
         this.playerOne.classList.toggle("opacity")
         this.playerTwo.classList.toggle("opacity")
     }
@@ -100,10 +126,10 @@ class Game extends HTMLElement {
     setBoardHoverClass() {
         this.board.classList.remove(this.playerOneSymbol);
         this.board.classList.remove(this.playerTwoSymbol);
-        if (this.isPlayerOneTurn) {
-            this.board.classList.add(this.playerOneSymbol);
-        } else {
+        if (this.isPlayerTwoTurn) {
             this.board.classList.add(this.playerTwoSymbol);
+        } else {
+            this.board.classList.add(this.playerOneSymbol);
         }
     }
 
