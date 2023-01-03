@@ -58,9 +58,9 @@ class Game extends HTMLElement {
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
-        this.startGame();
-
         this.onCellClick = this.onCellClick.bind(this);
+
+        this.startGame();
 
         this.initButton.addEventListener("click", () => {
             this.startGame();
