@@ -16,6 +16,11 @@ class PatternLock extends HTMLElement {
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
+        // trick to be able to remove the event listener without losing the context
+        // cf https://stackoverflow.com/questions/10444077/javascript-removeeventlistener-not-working
+        this.onCanvasMouseDown = this.onCanvasMouseDown.bind(this);
+        this.submitPattern = this.submitPattern.bind(this);
+
         this.initPattern();
     }
 
@@ -34,24 +39,16 @@ class PatternLock extends HTMLElement {
         }
 
         this.drawPattern();
-        // trick to be able to remove the event listener without losing the context
-        // cf https://stackoverflow.com/questions/10444077/javascript-removeeventlistener-not-working
-        this.onCanvasMouseDown = this.onCanvasMouseDown.bind(this);
-
 
         const actions = ['mouse', 'pointer'];
         for (const action of actions) {
             canvas.addEventListener(action + 'down', () => {
                 canvas.addEventListener(action + 'move', this.onCanvasMouseDown, true);
+                if (action === 'mouse') {
+                    canvas.addEventListener('mouseout', this.submitPattern, true); // not working for pointer cf scss
+                }
             });
-            canvas.addEventListener(action + 'up', () => {
-                canvas.removeEventListener(action + 'move', this.onCanvasMouseDown, true);
-                this.submitPattern();
-            });
-            canvas.addEventListener(action + 'out', (e) => {
-                canvas.removeEventListener(action + 'move', this.onCanvasMouseDown, true);
-                this.submitPattern();
-            });
+            canvas.addEventListener(action + 'up', () => this.submitPattern());
         }
     }
 
@@ -85,6 +82,11 @@ class PatternLock extends HTMLElement {
     }
 
     submitPattern() {
+        this.context.canvas.removeEventListener('mousemove', this.onCanvasMouseDown, true);
+        this.context.canvas.removeEventListener('mouseout', this.submitPattern, true);
+        this.context.canvas.removeEventListener('pointermove', this.onCanvasMouseDown, true);
+
+
         setTimeout(() => {
             document.dispatchEvent(new CustomEvent('pattern-lock-submitted', {
                 detail: {
@@ -93,7 +95,7 @@ class PatternLock extends HTMLElement {
             }));
             this.selectedPattern = [];
             this.drawPattern();
-        }, 200);
+        }, 150); // to quickly see the last circle selected
     }
 
     onCanvasMouseDown(event) {
