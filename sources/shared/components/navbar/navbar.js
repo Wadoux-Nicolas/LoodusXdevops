@@ -75,12 +75,11 @@ class Navbar extends HTMLElement {
     }
 
     setBatteryLevel() {
-        const navbarElement = this;
         navigator.getBattery()
-            .then(function(battery) {
-                navbarElement.updateBatteryLevel(battery);
-                    battery.onlevelchange = function () {
-                        navbarElement.updateBatteryLevel(battery);
+            .then(battery => {
+                this.updateBatteryLevel(battery);
+                    battery.onlevelchange = () => {
+                        this.updateBatteryLevel(battery);
                     };
             })
             .catch(function(err) {
