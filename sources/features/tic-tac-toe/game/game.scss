@@ -6,12 +6,11 @@
         .container {
             display: flex;
             flex-direction: column;
-            gap: 50px;
             position: relative;
 
             .game {
                 display: flex;
-                justify-content: space-between;
+                justify-content: space-around;
             }
 
             .actions {
@@ -66,7 +65,8 @@
             align-content: center;
             justify-items: center;
             align-items: center;
-            grid-template-columns: repeat(3, auto)
+            grid-template-columns: repeat(3, auto);
+            margin-bottom: 60px;
         }
 
         .board.x .cell:not(.o):not(.x):hover {
@@ -139,6 +139,14 @@
             transform: translate(-50%, -50%);
             padding: 10px 50px;
             color: themed(bg-color);
+        }
+
+        @include mobile-large {
+            .container {
+                .game {
+                    margin-bottom: 40px;
+                }
+            }
         }
 
     }
