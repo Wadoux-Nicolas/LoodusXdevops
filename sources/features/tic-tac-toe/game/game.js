@@ -1,6 +1,8 @@
 import "./game.scss"
 import {getUrl} from "../../../shared/helper";
 import {gameTagName} from "./game-helpers";
+import {openModal} from "../../../shared/components/modal/modal-helpers";
+import {scoreTagName} from "../score/score-helpers";
 
 class Game extends HTMLElement {
 
@@ -47,17 +49,25 @@ class Game extends HTMLElement {
         return this.querySelector("#endGame");
     }
 
+    get scoreButton() {
+        return this.querySelector("#score");
+    }
+
     async connectedCallback() {
         await fetch(getUrl("features/tic-tac-toe/game/game.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
-        this.onCellClick = this.onCellClick.bind(this);
-
         this.startGame();
+
+        this.onCellClick = this.onCellClick.bind(this);
 
         this.initButton.addEventListener("click", () => {
             this.startGame();
+        });
+
+        this.scoreButton.addEventListener("click", () => {
+           openModal(scoreTagName);
         });
     }
 

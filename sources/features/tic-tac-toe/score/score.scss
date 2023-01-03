@@ -1,0 +1,47 @@
+@import "sources/shared/assets/styles/theme";
+
+#score {
+    @include theme() {
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
+            justify-content: space-evenly;
+        }
+
+        .player1, .player2 {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .player1 {
+            .card {
+                border: themed(primary) solid 2px;
+            }
+            color: themed(primary);
+        }
+
+        .player2 {
+            .card {
+                border: themed(accent) solid 2px;
+            }
+            color: themed(accent);
+        }
+
+        .card {
+            border-radius: 15px;
+            height: 70px;
+            width: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .material-icons {
+                font-size: 60px;
+                color: themed(dark-grey);
+            }
+        }
+    }
+}
