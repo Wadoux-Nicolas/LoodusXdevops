@@ -64,11 +64,12 @@ class LockScreen extends HTMLElement {
         } else {
             this.error();
         }
+
+        this.querySelector('#unlock-password-input').value = '';
     }
 
     success() {
         document.body.classList.remove('is-locked');
-        this.querySelector('#unlock-password-input').value = '';
         this.querySelector('#error-code-message').classList.add('hidden');
     }
 

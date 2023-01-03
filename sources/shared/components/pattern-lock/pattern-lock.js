@@ -38,17 +38,21 @@ class PatternLock extends HTMLElement {
         // cf https://stackoverflow.com/questions/10444077/javascript-removeeventlistener-not-working
         this.onCanvasMouseDown = this.onCanvasMouseDown.bind(this);
 
-        canvas.addEventListener('mousedown', () => {
-            canvas.addEventListener('mousemove', this.onCanvasMouseDown, true);
-        });
-        canvas.addEventListener('mouseup', () => {
-            canvas.removeEventListener('mousemove', this.onCanvasMouseDown, true);
-            this.submitPattern();
-        });
-        canvas.addEventListener('mouseout', () => {
-            canvas.removeEventListener('mousemove', this.onCanvasMouseDown, true);
-            this.submitPattern();
-        });
+
+        const actions = ['mouse', 'pointer'];
+        for (const action of actions) {
+            canvas.addEventListener(action + 'down', () => {
+                canvas.addEventListener(action + 'move', this.onCanvasMouseDown, true);
+            });
+            canvas.addEventListener(action + 'up', () => {
+                canvas.removeEventListener(action + 'move', this.onCanvasMouseDown, true);
+                this.submitPattern();
+            });
+            canvas.addEventListener(action + 'out', (e) => {
+                canvas.removeEventListener(action + 'move', this.onCanvasMouseDown, true);
+                this.submitPattern();
+            });
+        }
     }
 
     drawPattern() {
