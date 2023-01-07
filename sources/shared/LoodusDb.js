@@ -12,17 +12,17 @@ class LoodusDb {
         }
 
         const request = window.indexedDB.open("loodusDb", 1);
+        const loodusDocuments = ['parameters', 'calculator'];
 
         request.onupgradeneeded = (e) => {
-            if (!e.target.result.objectStoreNames.contains('parameters')) { // if there's no "parameters" store
-                e.target.result.createObjectStore('parameters', {keyPath: 'id'}); // create it
-            }
-            if (!e.target.result.objectStoreNames.contains('calculator')) { // if there's no "calculator" store
-                e.target.result.createObjectStore('calculator', {keyPath: 'id'}); // create it
+            for(let document of loodusDocuments) {
+                if (!e.target.result.objectStoreNames.contains(document)) { // if there's no "parameters" store
+                    e.target.result.createObjectStore(document, {keyPath: 'id'}); // create it
+                }
             }
         };
 
-         return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request.onsuccess = (e) => {
                 this.db = e.target.result;
                 resolve(this.db);
@@ -66,16 +66,18 @@ class LoodusDb {
                     id: documentId
                 }
 
-                if(hardMode || !objectToUpdate.result?.data) {
+                if (hardMode || !objectToUpdate.result?.data) {
                     // create id or completely erase the previous data
                     console.log('hard')
                     newObject['data'] = object;
                 } else {
+                    // if data is an array, we simply push new data
                     if (Array.isArray(objectToUpdate.result.data)) {
                         const newArray = [...objectToUpdate.result.data];
                         newArray.push(...object);
                         newObject['data'] = newArray;
                     } else {
+                        // data is an object
                         newObject['data'] = {
                             ...objectToUpdate.result.data,
                             ...object
