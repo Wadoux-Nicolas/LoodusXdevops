@@ -1,9 +1,12 @@
 import './index.scss';
+import LoodusDb from "./shared/LoodusDb";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const body = document.body;
     const btn = document.querySelector("button");
     const preferenceQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    let db = new LoodusDb();
+    await db.openDb();
 
     // ------ Theme mode handle ------
 
