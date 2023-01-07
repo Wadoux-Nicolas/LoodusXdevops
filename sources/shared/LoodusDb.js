@@ -12,38 +12,20 @@ class LoodusDb {
         }
 
         const request = window.indexedDB.open("loodusDb", 1);
+        const loodusDocuments = ['parameters', 'calculator'];
 
         request.onupgradeneeded = (e) => {
-            if (!e.target.result.objectStoreNames.contains('parameters')) { // if there's no "parameters" store
-                e.target.result.createObjectStore('parameters', {keyPath: 'id'}); // create it
+            for(let document of loodusDocuments) {
+                if (!e.target.result.objectStoreNames.contains(document)) { // if there's no "parameters" store
+                    e.target.result.createObjectStore(document, {keyPath: 'id'}); // create it
+                }
             }
         };
 
-         return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             request.onsuccess = (e) => {
                 this.db = e.target.result;
-                let transaction = e.target.result.transaction("parameters", "readwrite");
-                let parameters = transaction.objectStore("parameters");
-                const allParameters = parameters.getAll();
-
-                allParameters.onsuccess = function () {
-                    // If there's no parameters in the db, create them
-                    if (!allParameters.result.length > 0) {
-                        defaultValue.forEach(
-                            parameter => {
-                                const request = parameters.add(parameter);
-
-                                request.onsuccess = function () {
-                                    console.log("parameter added to the store", request.result);
-                                };
-
-                                request.onerror = function () {
-                                    console.log("Error", request.error);
-                                };
-                            });
-                    }
-                };
-                resolve();
+                resolve(this.db);
             }
             request.onerror = (e) => {
                 reject(e);
@@ -52,44 +34,64 @@ class LoodusDb {
         });
     }
 
-    getParameters(parameterIds = []) {
+    // usage example
+    // loodusDb.getAll('parameters').then(r => console.log(r));
+    getAll(document, query = null) {
         return new Promise((resolve, reject) => {
-            let transaction = this.db.transaction('parameters', 'readwrite');
-            let request = transaction.objectStore('parameters').getAll();
-            request.onerror = e => {
-                reject(e.target.error);
-                throw new LoodusDbError('Error getting parameters');
-            }
-            request.onsuccess = e => resolve(
-                e.target.result.filter(
-                    parameter => !parameterIds.length > 0 || parameterIds.includes(parameter.id)
-                )
-            );
+            const transaction = this.db.transaction(document, 'readwrite');
+            const request = transaction.objectStore(document).getAll(query);
+            request.onerror = e => reject(e.target.error);
+            request.onsuccess = e => resolve(e.target.result);
         });
     }
 
-    setParameter(parameterId, parameterName, parameterValue) {
+    // usage example
+    // loodusDb.get('parameters', 'hourParameters').then(r => console.log(r));
+    get(document, query) {
         return new Promise((resolve, reject) => {
-            let transaction = this.db.transaction('parameters', 'readwrite');
-            let parametersById = transaction.objectStore('parameters').get(parameterId);
+            const transaction = this.db.transaction(document, 'readwrite');
+            const request = transaction.objectStore(document).get(query);
+            request.onerror = e => reject(e.target.error);
+            request.onsuccess = e => resolve(e.target.result);
+        });
+    }
 
-            parametersById.onsuccess = function () {
-                transaction.objectStore('parameters').put({
-                        id: parameterId,
-                        parameters: {
-                            ...parametersById.result.parameters,
-                            [parameterName]: parameterValue
-                        }
+    set(document, documentId, object, hardMode = false) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(document, 'readwrite');
+            const objectToUpdate = transaction.objectStore(document).get(documentId);
+
+            objectToUpdate.onsuccess = () => {
+                const newObject = {
+                    id: documentId
+                }
+
+                if (hardMode || !objectToUpdate.result?.data) {
+                    // create id or completely erase the previous data
+                    console.log('hard')
+                    newObject['data'] = object;
+                } else {
+                    // if data is an array, we simply push new data
+                    if (Array.isArray(objectToUpdate.result.data)) {
+                        const newArray = [...objectToUpdate.result.data];
+                        newArray.push(...object);
+                        newObject['data'] = newArray;
+                    } else {
+                        // data is an object
+                        newObject['data'] = {
+                            ...objectToUpdate.result.data,
+                            ...object
+                        };
                     }
-                )
-                console.log('parameter set');
-                // On renvoie le résultat
-                resolve(parametersById.result.parameters);
+                }
+
+                const updateRequest = transaction.objectStore(document).put(newObject);
+                updateRequest.onsuccess = resolve;
             };
 
-            parametersById.onerror = function () {
-                reject(parametersById.error);
-                throw new LoodusDbError('Error setting parameter');
+            objectToUpdate.onerror = function () {
+                reject(objectToUpdate.error);
+                throw new LoodusDbError('Error setting ' + documentId);
             }
         });
     }
@@ -97,10 +99,10 @@ class LoodusDb {
 
 export default LoodusDb;
 
-const defaultValue = [
+export const defaultParameterValues = [
     {
         id: 'dateParameters',
-        parameters: {
+        data: {
             display: true,
             displayDay: true,
             displayMonth: true,
@@ -109,7 +111,7 @@ const defaultValue = [
     },
     {
         id: 'hourParameters',
-        parameters: {
+        data: {
             displayHour: true,
             displayMinute: true,
             displaySecond: true,
@@ -117,20 +119,20 @@ const defaultValue = [
     },
     {
         id: 'vibrationParameters',
-        parameters: {
+        data: {
             displayVibrationStatus: true,
             enableVibration: true,
         }
     },
     {
         id: 'batteryParameters',
-        parameters: {
+        data: {
             displayBatteryStatus: true,
         }
     },
     {
         id: 'networkLatencyParameters',
-        parameters: {
+        data: {
             displayNetworkLatency: true,
             domain: 'loodus.nicolas-wadoux.fr',
             delay: 2000,

@@ -1,6 +1,7 @@
 import "./calculator.scss"
 import {calculatorTagName} from "./calculator-helpers";
 import {_, getUrl, vibrate} from "../../shared/helper";
+import LoodusDb, {defaultParameterValues} from "../../shared/LoodusDb";
 
 class Calculator extends HTMLElement {
     operation = '';
@@ -41,6 +42,7 @@ class Calculator extends HTMLElement {
 
         this.querySelector('#remove-history').addEventListener('click', () => {
             this.savedResults = [];
+            // TODO REMOVE RESULTS IN DB
             this.historyElement.innerHTML = '';
         });
 
@@ -49,6 +51,8 @@ class Calculator extends HTMLElement {
             const key = event.key;
             this.handleKeyBoardInputs(key);
         });
+
+        // TODO get data from db
     }
 
     handleKeyBoardInputs(key) {
@@ -208,11 +212,22 @@ class Calculator extends HTMLElement {
             result: result,
             operation: this.operation,
         };
-        this.savedResults.push(savedOperation);
-        this.updateHistory(savedOperation);
 
+        this.saveNewResult(savedOperation);
         this.operation = result;
         this.updateResult();
+    }
+
+    saveNewResult(operation) {
+        this.savedResults.push(operation);
+        const loodusDb = new LoodusDb();
+        loodusDb.openDb().then(() => {
+            return loodusDb.set('calculator', 'history', [operation]).then(r => {
+                console.log('res')
+                console.log(r)
+            });
+        }).catch(error => console.log(error ?? "Enregistrement de l'historique impossible en base de données"))
+        this.updateHistory(operation);
     }
 }
 
