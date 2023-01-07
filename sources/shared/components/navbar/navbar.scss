@@ -25,10 +25,11 @@
     }
 
     #time {
-      margin: 0 15px;
-      padding: 2px 25px;
+      margin: auto 15px;
+      padding: 2px 15px;
       border-radius: 20px;
       background-color: themed(bg-color);
+      height: fit-content;
     }
 
     #parameters, #vibrate, #networkIcon {
@@ -89,7 +90,7 @@
 
     @include mobile-large {
       #time {
-        margin: 0 10px;
+        margin: auto 10px;
         padding: 2px 10px;
       }
       > div:last-child {

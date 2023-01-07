@@ -42,76 +42,86 @@ class Navbar extends HTMLElement {
             openModal(parametersTagName);
         });
 
-        this.setTime();
-        this.setDate();
-        this.setBatteryLevel();
+        this.setDateAndTime();
         this.setNetworkStatus();
+        setInterval(() => {
+            this.setDateAndTime();
+            this.setNetworkStatus();
+        }, 1000);
+
+        window.addEventListener('resize', () => this.setDateAndTime())
+
+        this.initBatteryListeners();
     }
 
-    setTime() {
+    setDateAndTime() {
         this.time.textContent = new Date().toLocaleString('fr-FR', {
             hour: 'numeric',
             minute: 'numeric'
         })
-    }
 
-    setDate() {
-        let date = new Date().toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long'});
+        let date = new Date().toLocaleString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long'});
         date = date.charAt(0).toUpperCase() + date.slice(1);
-        this.checkWidth(date);
-        window.onresize = (event) => this.checkWidth(date);
+        this.checkWidthForDate(date);
     }
 
-    checkWidth(date) {
+    checkWidthForDate(date) {
         const width = window.innerWidth;
-        if (width < 425) {
+        if (width < 500) {
             let shortDate = date.split(' ').slice(0, -1).join(' ');
-            shortDate += " " + new Date().toLocaleString('fr-FR', { month: 'short' });
+            shortDate += " " + new Date().toLocaleString('fr-FR', {month: 'short'});
             this.date.textContent = shortDate;
-        }
-        else {
+        } else {
             this.date.textContent = date;
         }
     }
 
-    setBatteryLevel() {
+    initBatteryListeners() {
+        if (!navigator.getBattery) {
+            console.error('Battery API is not handled by this browser');
+            this.querySelectorAll('.batteryInformations').forEach(info => info.classList.add('hidden'));
+            return;
+        }
+
         navigator.getBattery()
             .then(battery => {
-                this.updateBatteryLevel(battery);
-                    battery.onlevelchange = () => {
-                        this.updateBatteryLevel(battery);
-                    };
+                this.updateBatteryCharging(battery.charging);
+                this.updateBatteryLevel(battery.level);
+                battery.addEventListener('chargingchange', () => this.updateBatteryCharging(battery.charging));
+                battery.addEventListener('levelchange', () => this.updateBatteryLevel(battery.level));
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log(err);
             });
     }
 
-    updateBatteryLevel(battery) {
-        this.batteryPercent.textContent = Math.round(battery.level * 100) + "%";
-        this.batteryLevel.style.height = `${battery.level * 18}px`;
+    updateBatteryLevel(level) {
+        this.batteryPercent.textContent = Math.round(level * 100) + "%";
+        this.batteryLevel.style.height = `${level * 18}px`;
+    }
+
+    updateBatteryCharging(isCharging) {
+        if (isCharging) {
+            this.batteryLevel.classList.add("charging");
+        } else {
+            this.batteryLevel.classList.remove("charging");
+        }
     }
 
     setNetworkStatus() {
-        const rtt = navigator.connection.rtt;
-        this.latenceLevel.textContent = rtt + "ms";
-        switch (true) {
-            case (rtt < 100): {
+        if (navigator.connection && isFinite(navigator.connection.rtt)) {
+            const rtt = navigator.connection.rtt;
+            this.latenceLevel.textContent = rtt + "ms";
+
+            if (rtt < 100) {
                 this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
-                break;
-            }
-            case (rtt < 200): {
+            } else if (rtt < 200) {
                 this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
-                break;
-            }
-            case (rtt > 200): {
+            } else {
                 this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
-                break;
-            }
-            default: {
-                this.networkIcon.innerHTML = `no data`;
             }
         }
     }
 }
+
 customElements.define(navbarTagName, Navbar);
