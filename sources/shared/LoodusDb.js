@@ -1,3 +1,4 @@
+import {LoodusDbError} from "./error";
 
 class LoodusDb {
     db;
@@ -5,7 +6,7 @@ class LoodusDb {
     constructor() {
     }
 
-    async openDb() {
+    openDb() {
         if (!window.indexedDB) {
             console.log({message: 'Unsupported indexedDB'});
         }
@@ -18,12 +19,12 @@ class LoodusDb {
             }
         };
 
-        await new Promise((resolve, reject) => {
+         return new Promise((resolve, reject) => {
             request.onsuccess = (e) => {
                 this.db = e.target.result;
                 let transaction = e.target.result.transaction("parameters", "readwrite");
                 let parameters = transaction.objectStore("parameters");
-                let allParameters = parameters.getAll();
+                const allParameters = parameters.getAll();
 
                 allParameters.onsuccess = function () {
                     // If there's no parameters in the db, create them
@@ -45,17 +46,20 @@ class LoodusDb {
                 resolve();
             }
             request.onerror = (e) => {
-                console.log({message: 'Error opening indexedDB', error: e});
                 reject(e);
+                throw new LoodusDbError('Error opening database');
             }
         });
     }
 
-    async getParameters(parameterIds = []) {
-        return await new Promise((resolve, reject) => {
+    getParameters(parameterIds = []) {
+        return new Promise((resolve, reject) => {
             let transaction = this.db.transaction('parameters', 'readwrite');
             let request = transaction.objectStore('parameters').getAll();
-            request.onerror = e => reject(e.target.error);
+            request.onerror = e => {
+                reject(e.target.error);
+                throw new LoodusDbError('Error getting parameters');
+            }
             request.onsuccess = e => resolve(
                 e.target.result.filter(
                     parameter => !parameterIds.length > 0 || parameterIds.includes(parameter.id)
@@ -65,24 +69,29 @@ class LoodusDb {
     }
 
     setParameter(parameterId, parameterName, parameterValue) {
-        let transaction = this.db.transaction('parameters', 'readwrite');
-        let parametersById = transaction.objectStore('parameters').get(parameterId);
+        return new Promise((resolve, reject) => {
+            let transaction = this.db.transaction('parameters', 'readwrite');
+            let parametersById = transaction.objectStore('parameters').get(parameterId);
 
-        parametersById.onsuccess = function () {
-            transaction.objectStore('parameters').put({
-                    id: parameterId,
-                    parameters: {
-                        ...parametersById.result.parameters,
-                        [parameterName]: parameterValue
+            parametersById.onsuccess = function () {
+                transaction.objectStore('parameters').put({
+                        id: parameterId,
+                        parameters: {
+                            ...parametersById.result.parameters,
+                            [parameterName]: parameterValue
+                        }
                     }
-                }
-            )
-            console.log('parameter set');
-        };
+                )
+                console.log('parameter set');
+                // On renvoie le résultat
+                resolve(parametersById.result.parameters);
+            };
 
-        parametersById.onerror = function () {
-            console.log('No parameter with id: ' + parameterId);
-        }
+            parametersById.onerror = function () {
+                reject(parametersById.error);
+                throw new LoodusDbError('Error setting parameter');
+            }
+        });
     }
 }
 
