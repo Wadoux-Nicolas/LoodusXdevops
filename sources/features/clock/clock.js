@@ -1,6 +1,6 @@
 import "./clock.scss"
 import {clockTagName} from "./clock-helpers";
-import {getUrl, local} from "../../shared/helper";
+import {getUrl, local} from "../../shared/js/helper";
 
 class Clock extends HTMLElement {
     dateInterval = null;

@@ -2,7 +2,7 @@ import {navbarTagName} from "./navbar-helpers";
 import "./navbar.scss";
 import {openModal} from "../modal/modal-helpers";
 import {parametersTagName} from "../../../features/parameters/parameters-helper";
-import {getUrl} from "../../helper";
+import {getUrl} from "../../js/helper";
 
 class Navbar extends HTMLElement {
     constructor() {
@@ -113,9 +113,9 @@ class Navbar extends HTMLElement {
             const rtt = navigator.connection.rtt;
             this.latenceLevel.textContent = rtt + "ms";
 
-            if (rtt < 100) {
+            if (rtt <= 100) {
                 this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
-            } else if (rtt < 200) {
+            } else if (rtt <= 200) {
                 this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
             } else {
                 this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;

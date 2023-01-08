@@ -1,5 +1,5 @@
 import './index.scss';
-import LoodusDb, {defaultParameterValues} from "./shared/LoodusDb";
+import LoodusDb, {defaultParameterValues} from "./shared/js/loodusDb";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const body = document.body;

@@ -1,7 +1,7 @@
 import "./parameters.scss"
 import {parametersTagName} from "./parameters-helper";
-import {getUrl} from "../../shared/helper";
-import LoodusDb, {defaultParameterValues} from "../../shared/LoodusDb";
+import {getUrl} from "../../shared/js/helper";
+import LoodusDb, {defaultParameterValues} from "../../shared/js/loodusDb";
 
 class Parameters extends HTMLElement {
     constructor() {
