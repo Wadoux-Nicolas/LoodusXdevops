@@ -1,0 +1,110 @@
+@import "sources/shared/assets/styles/theme";
+
+#navbar {
+  @include theme() {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > div {
+      display: flex;
+    }
+
+    > div:last-child {
+      gap: 15px;
+    }
+
+    .flex-items {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    #date {
+      color: permanent(bg-color)
+    }
+
+    #time {
+      margin: auto 15px;
+      padding: 2px 15px;
+      border-radius: 20px;
+      background-color: themed(bg-color);
+      height: fit-content;
+    }
+
+    #parameters, #vibrate, #networkIcon {
+      .material-icons {
+        color: permanent(bg-color)
+      }
+    }
+
+    #parameters {
+      cursor: pointer;
+    }
+
+    .batteryContainer {
+      display: flex;
+      flex-direction : column;
+      align-items: center;
+      position: relative;
+    }
+
+    .batteryOuter {
+      border-radius: 2px;
+      border: 1px solid white;
+      width: 10px;
+      height: 20px;
+    }
+
+    .batteryBump {
+      border-radius: 2px;
+      background-color: permanent(bg-color);
+      margin: 2px;
+      width: 3px;
+      height: 1px;
+    }
+
+    .batteryInformations, .network {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    #batteryPercent {
+      font-size: 12px;
+      color: permanent(bg-color);
+    }
+
+    #latenceLevel {
+      font-size: 12px;
+      color: permanent(bg-color);
+    }
+
+    #batteryLevel {
+      position: absolute;
+      background-color: permanent(bg-color);
+      width: 8px;
+      bottom: 1px;
+    }
+
+    @include mobile-large {
+      #time {
+        margin: auto 10px;
+        padding: 2px 10px;
+      }
+      > div:last-child {
+        gap: 8px;
+      }
+      .material-icons {
+        font-size: 20px;
+      }
+      #latenceLevel, #batteryPercent {
+        font-size: 10px;
+      }
+      .batteryInformations, .network {
+        gap: 3px;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import "./stopwatch.scss"
 import {stopwatchTagName} from "./stopwatch-helpers";
-import {_, getUrl, sendNotification, vibrate} from "../../../shared/helper";
+import {_, getUrl, sendNotification, vibrate} from "../../../shared/js/helper";
 import stopwatchSound from "../../../shared/assets/sounds/stopwatch.mp3";
 
 class Stopwatch extends HTMLElement {

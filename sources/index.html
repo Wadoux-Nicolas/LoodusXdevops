@@ -9,10 +9,11 @@
         <link rel="icon" href="./shared/assets/images/loodus.png" type="image/png">
         <title>Loodus</title>
         <script src="https://polyfill.io/v3/polyfill.min.js"></script>
-        <script type="module" src="./index.js"></script>
+        <script src="./index.js" type="module"></script>
         <script src="./shared/components/progress-bar/progress-bar.js" type="module"></script>
         <script src="./features/home/home.js" type="module"></script>
         <script src="./features/lock-screen/lock-screen.js" type="module"></script>
+        <script src="./shared/components/navbar/navbar.js" type="module"></script>
         <script src="./features/tic-tac-toe/tic-tac-toe.js" type="module"></script>
         <script src="./features/clock/clock.js" type="module"></script>
         <script src="./features/clock/chronometer/chronometer.js" type="module"></script>
@@ -25,6 +26,7 @@
     <body class="is-locked">
         <main>
             <section id="home-unlocked">
+                <navbar-component></navbar-component>
                 <button>Toggle mode</button>
                 <home-feature></home-feature>
                 <modal-component></modal-component>

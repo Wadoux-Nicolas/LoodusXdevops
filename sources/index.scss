@@ -10,8 +10,8 @@
     margin: 0;
     padding: 0;
     font-family: "Inter";
-    -webkit-tap-highlight-color: transparent;
     font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -23,7 +23,7 @@ html, body {
         background-blend-mode: hard-light;
 
         color: themed(text-color);
-        background: themed(dark-white) url("./shared/assets/images/background.svg") no-repeat;
+        background: themed(dark-white) url("./shared/assets/images/background.jpg") no-repeat;
         background-size: cover;
 
         main {

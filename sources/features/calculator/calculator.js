@@ -1,29 +1,38 @@
 import "./calculator.scss"
 import {calculatorTagName} from "./calculator-helpers";
-import {_, getUrl, vibrate} from "../../shared/helper";
+import {_, getUrl, vibrate} from "../../shared/js/helper";
+import LoodusDb, {defaultParameterValues} from "../../shared/js/loodusDb";
+import {CalculatorError} from "../../shared/js/errors";
+import {errorAnimation} from "../../shared/js/animations";
 
 class Calculator extends HTMLElement {
-    operation = '';
+    operation = '0';
     savedResults = [];
+    loodusDb = new LoodusDb();
+    errorCalculatorAnimation = null;
 
     constructor() {
         super();
     }
 
     get resultElement() {
-        return this.querySelector("#result")
+        return this.querySelector("#result");
     }
 
     get historyContainerElement() {
-        return this.querySelector("#calculator-history-container")
+        return this.querySelector("#calculator-history-container");
     }
 
     get historyElement() {
-        return this.historyContainerElement.querySelector("#history")
+        return this.historyContainerElement.querySelector("#history");
     }
 
     get keypadElement() {
-        return this.querySelector("#keypad")
+        return this.querySelector("#keypad");
+    }
+
+    get errorCalculatorContainer() {
+        return this.querySelector("#error-calculator-container");
     }
 
     async connectedCallback() {
@@ -31,8 +40,21 @@ class Calculator extends HTMLElement {
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
+        await this.loodusDb.openDb()
+            .catch(error => console.log(error ?? "Erreur lors de la connexion à la base de données"));
+
+        this.loodusDb.get('calculator', 'history').then(result => {
+            this.savedResults = result.data;
+            for (let savedResult of this.savedResults) {
+                this.updateHistory(savedResult);
+            }
+        });
+
         this.querySelector('#history-toggle').addEventListener('click', () => {
             this.historyContainerElement.classList.toggle('hidden');
+            if (!this.historyContainerElement.classList.contains('hidden')) {
+                this.historyElement.scrollTop = -this.historyElement.scrollHeight; // scroll to top, negative cause of flex reverse-column
+            }
         });
 
         this.keypadElement.querySelectorAll('button').forEach(button => {
@@ -41,6 +63,7 @@ class Calculator extends HTMLElement {
 
         this.querySelector('#remove-history').addEventListener('click', () => {
             this.savedResults = [];
+            this.loodusDb.set('calculator', 'history', this.savedResults, true);
             this.historyElement.innerHTML = '';
         });
 
@@ -49,6 +72,10 @@ class Calculator extends HTMLElement {
             const key = event.key;
             this.handleKeyBoardInputs(key);
         });
+
+        // init error animation
+        this.errorCalculatorAnimation = this.errorCalculatorContainer.animate(errorAnimation.keyframes, errorAnimation.options);
+        this.errorCalculatorAnimation.pause();
     }
 
     handleKeyBoardInputs(key) {
@@ -80,19 +107,24 @@ class Calculator extends HTMLElement {
 
     handleCalculatorAction(action, number = 0) {
         vibrate();
-        // if we had an error but still try to do something, clear the error
-        this.operation = this.operation.replace('Error', '');
+        this.errorCalculatorContainer.classList.add('hidden');
+
+        // if operation is 0, we remove it (to not have 0-1, but -1, 0*(..) but (..), etc)
+        const actionWith0Permitted = ['point', 'equals', 'power', 'divide', 'multiply', 'plus-minus'];
+        if (this.operation === '0' && !actionWith0Permitted.includes(action)) {
+            this.operation = '';
+        }
 
         switch (action) {
             case 'all-clear':
-                this.operation = ''; // empty to be replaced with the first pressed button
+                this.operation = '0';
                 break;
             case 'clear':
-                this.operation = this.operation.slice(0, -1);
+                this.operation = this.operation.slice(0, -1) || '0';
                 break;
             case 'parenthesis-open':
-                // autocomplete open ( with multiply
-                if (this.operation !== '' && isFinite(this.operation.at(-1))) {
+                // autocomplete open ( with multiply, even for Infinity considered as a right value
+                if (isFinite(this.operation.at(-1)) || this.operation.endsWith('Infinity')) {
                     this.operation += '*';
                 }
                 this.operation += '(';
@@ -101,14 +133,15 @@ class Calculator extends HTMLElement {
                 this.operation = this.getOperationWithSignOfLastNumberInverted();
                 break;
             case 'point':
-                // autocomplete point with 0
-                if (this.operation === '') {
-                    this.operation += '0';
-                }
                 this.operation += '.';
                 break;
             case 'equals':
-                this.compute();
+                try {
+                    this.compute();
+                } catch (e) {
+                    console.error("L'opération n'est pas valide");
+                    this.showComputeError();
+                }
                 break;
             case 'power':
             case 'minus':
@@ -129,7 +162,12 @@ class Calculator extends HTMLElement {
             case 'number':
                 this.operation += number;
                 break;
+            default:
+                console.error("Action inconnue");
+                this.operation = this.operation === '' ? '0' : this.operation;
+                break;
         }
+
         this.updateResult();
     }
 
@@ -163,7 +201,7 @@ class Calculator extends HTMLElement {
     }
 
     updateResult() {
-        this.resultElement.innerHTML = this.operation !== '' ? this.operation : '0';
+        this.resultElement.innerHTML = this.operation;
         this.resizeResultFont();
     }
 
@@ -194,25 +232,35 @@ class Calculator extends HTMLElement {
     }
 
     compute() {
-        // handle cleared 0 = 0, and replace Error to don't try to eval it
-        this.operation = this.operation === '' ? '0' : this.operation;
-
         let result;
         try {
-            result = eval(this.operation.replace('^', '**')).toString();
-        } catch {
-            result = 'Error';
+            // Infinity won't throw an error, but that good, Infinty * -1 is a right operation
+            // round to 2 decimals (+ used to convert 5.50 to 5.5 for example)
+            result = +eval(this.operation.replace('^', '**')).toFixed(2);
+            result = result.toString();
+        } catch (e) {
+            throw new CalculatorError('Operation not permitted');
         }
 
         const savedOperation = {
             result: result,
             operation: this.operation,
         };
-        this.savedResults.push(savedOperation);
-        this.updateHistory(savedOperation);
 
+        this.saveNewResult(savedOperation);
         this.operation = result;
-        this.updateResult();
+    }
+
+    saveNewResult(operation) {
+        this.savedResults.push(operation);
+        this.loodusDb.set('calculator', 'history', [operation])
+            .catch(error => console.log(error ?? "Enregistrement de l'historique impossible en base de données"))
+        this.updateHistory(operation);
+    }
+
+    showComputeError() {
+        this.errorCalculatorContainer.classList.remove('hidden');
+        this.errorCalculatorAnimation.play();
     }
 }
 

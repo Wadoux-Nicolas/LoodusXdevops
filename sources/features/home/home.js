@@ -5,7 +5,7 @@ import {homeTagName} from "./home-helpers";
 import {calculatorTagName} from "../calculator/calculator-helpers";
 import {clockTagName} from "../clock/clock-helpers";
 import {ticTacToeTagName} from "../tic-tac-toe/tic-tac-toe-helpers";
-import {getUrl, local, updateAvatar} from "../../shared/helper";
+import {getUrl, local, updateAvatar} from "../../shared/js/helper";
 
 class Home extends HTMLElement {
 
