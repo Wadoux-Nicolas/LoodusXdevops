@@ -41,7 +41,7 @@ class Calculator extends HTMLElement {
             .then(html => this.innerHTML = html);
 
         await this.loodusDb.openDb()
-            .catch(error => console.log(error ?? "Erreur lors de la connexion à la base de données"));
+            .catch(error => console.error(error ?? "Erreur lors de la connexion à la base de données"));
 
         this.loodusDb.get('calculator', 'history').then(result => {
             this.savedResults = result.data;

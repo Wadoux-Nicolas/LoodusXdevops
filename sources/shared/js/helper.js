@@ -1,5 +1,5 @@
 // create a new html element by its tag, with given content, in its parent.
-import bobAvatar from "./assets/images/bob.png";
+import bobAvatar from "../assets/images/bob.png";
 
 export function _(tag, content, parent, id = null, customClass = null) {
     let element = document.createElement(tag);

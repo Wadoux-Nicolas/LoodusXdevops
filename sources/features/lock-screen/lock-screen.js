@@ -1,9 +1,13 @@
 import "./lock-screen.scss"
 import {lockScreenTagName} from "./lock-screen-helpers";
-import {getUrl, updateAvatar} from "../../shared/helper";
+import {getUrl, updateAvatar} from "../../shared/js/helper";
+import {errorAnimation} from "../../shared/js/animations";
+import LoodusDb from "../../shared/js/loodusDb";
 
 class LockScreen extends HTMLElement {
     errorMessageAnimation = null;
+    loodusDb = new LoodusDb();
+    lockParameters = null;
 
     constructor() {
         super();
@@ -16,8 +20,27 @@ class LockScreen extends HTMLElement {
 
         updateAvatar();
 
-        // TODO get prefered unlock method from settings to display the correct section
-        const unlockMethod = "pattern";
+        await this.loodusDb.openDb()
+            .then(() => {
+                return this.loodusDb.get('parameters', 'lockParameters')
+            })
+            .then(result => this.lockParameters = result.data)
+            .catch(error => {
+                console.error(error ?? "Erreur lors de la connexion à la base de données");
+                this.querySelector('#error-lock-db-message').classList.remove('hidden');
+                this.querySelector('#error-lock-db-message').animate(errorAnimation.keyframes, errorAnimation.options);
+            });
+
+        if (!this.lockParameters) {
+            return;
+        }
+
+        const unlockMethod = this.lockParameters.unlockMethod;
+
+        if (unlockMethod === 'free') {
+            this.success(); // no lock on this device
+        }
+
         try {
             this.querySelector(`#unlock-by-${unlockMethod}`).classList.remove("hidden");
         } catch (e) {
@@ -34,32 +57,12 @@ class LockScreen extends HTMLElement {
             this.submit('pattern', event.detail.pattern);
         });
 
-        this.errorMessageAnimation = this.querySelector('#error-code-message').animate([
-            {transform: 'translateX(0)', easing: 'ease-in'},
-            {transform: 'translateX(-5px)', easing: 'ease-out'},
-            {transform: 'translateX(5px)', easing: 'ease-in'},
-            {transform: 'translateX(0)', easing: 'ease-out'},
-        ], {
-            duration: 500,
-            iterations: 1
-        });
+        this.errorMessageAnimation = this.querySelector('#error-code-message').animate(errorAnimation.keyframes, errorAnimation.options);
         this.errorMessageAnimation.pause();
     }
 
     submit(type, value) {
-        let expectedValue = null;
-        switch (type) {
-            case 'password':
-                expectedValue = '0000'; // TODO Get password from db
-                break;
-            case 'pattern':
-                expectedValue = '123456789'; // TODO Get pattern from db
-                break;
-            default:
-                console.error('Unknown unlock method');
-        }
-
-        if (value === expectedValue) {
+        if (value === this.lockParameters.value) {
             this.success();
         } else {
             this.error();

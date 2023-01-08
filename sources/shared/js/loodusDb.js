@@ -8,7 +8,8 @@ class LoodusDb {
 
     openDb() {
         if (!window.indexedDB) {
-            console.log({message: 'Unsupported indexedDB'});
+            console.error('Unsupported indexedDB');
+            return;
         }
 
         const request = window.indexedDB.open("loodusDb", 1);
@@ -52,7 +53,7 @@ class LoodusDb {
             const transaction = this.db.transaction(document, 'readwrite');
             const request = transaction.objectStore(document).get(query);
             request.onerror = e => reject(e.target.error);
-            request.onsuccess = e => resolve(e.target.result);
+            request.onsuccess = e => e.target.result ? resolve(e.target.result) : reject(e.target.result);
         });
     }
 
@@ -127,6 +128,19 @@ export const defaultParameterValues = [
         id: 'batteryParameters',
         data: {
             displayBatteryStatus: true,
+        }
+    },
+    {
+        id: 'lockParameters',
+        data: {
+            unlockMethod: 'pattern', // pattern or password or free (no lock)
+            value: '123456789',
+        }
+    },
+    {
+        id: 'displayParameters',
+        data: {
+            theme: 'light', // light or dark
         }
     },
     {

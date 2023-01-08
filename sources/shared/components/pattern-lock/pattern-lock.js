@@ -1,6 +1,6 @@
 import "./pattern-lock.scss"
 import {patternLockTagName} from "./pattern-lock-helpers";
-import {getUrl} from "../../helper";
+import {getUrl} from "../../js/helper";
 
 class PatternLock extends HTMLElement {
     circles = [];
