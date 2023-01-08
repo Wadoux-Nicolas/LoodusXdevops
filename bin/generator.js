@@ -77,7 +77,7 @@ function createComponent() {
         const js =
 `import "./${formattedComponentName}.scss"
 import {${variableComponentName}} from "./${formattedComponentName}-helpers";
-import {getUrl} from "../../helper";
+import {getUrl} from "../../js/helper";
 
 class ${classComponentName} extends HTMLElement {
     constructor() {

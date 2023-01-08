@@ -1,4 +1,4 @@
-import {LoodusDbError} from "./error";
+import {LoodusDbError} from "./errors";
 
 class LoodusDb {
     db;
@@ -68,7 +68,6 @@ class LoodusDb {
 
                 if (hardMode || !objectToUpdate.result?.data) {
                     // create id or completely erase the previous data
-                    console.log('hard')
                     newObject['data'] = object;
                 } else {
                     // if data is an array, we simply push new data

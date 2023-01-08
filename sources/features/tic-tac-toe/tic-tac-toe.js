@@ -1,6 +1,6 @@
 import "./tic-tac-toe.scss"
 import {ticTacToeTagName} from "./tic-tac-toe-helpers";
-import {getUrl} from "../../shared/helper";
+import {getUrl} from "../../shared/js/helper";
 
 class TicTacToe extends HTMLElement {
     constructor() {
