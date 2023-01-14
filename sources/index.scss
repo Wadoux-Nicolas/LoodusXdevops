@@ -58,23 +58,20 @@ html, body {
 }
 
 
-#home-locked {
-    display: none;
-}
 .is-locked {
     background-blend-mode: luminosity !important;
-    #toggle-home-mode, #home-lock-screen-button {
+    .hidden-when-locked {
         display: none !important;
-    }
-    #home-unlocked {
-        display: none !important;
-    }
-    #home-locked {
-        display: block;
     }
 }
 
 .os-loading {
     text-align: center;
     color: #FFFFFF;
+}
+
+.footer-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }

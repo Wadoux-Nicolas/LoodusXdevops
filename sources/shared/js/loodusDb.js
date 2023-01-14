@@ -15,12 +15,13 @@ class LoodusDb {
         const request = window.indexedDB.open("loodusDb", 1);
         const loodusDocuments = ['parameters', 'calculator'];
 
-        request.onupgradeneeded = (e) => {
+        request.onupgradeneeded = async (e) => {
             for (let document of loodusDocuments) {
                 if (!e.target.result.objectStoreNames.contains(document)) { // if there's no "parameters" store
                     e.target.result.createObjectStore(document, {keyPath: 'id'}); // create it
                 }
             }
+            await initDb();
         };
 
         return new Promise((resolve, reject) => {
@@ -111,25 +112,46 @@ export async function initDb() {
 
     return new Promise((resolve, reject) => {
         allParameters.onsuccess = () => {
-            // If there's no parameters in the db, create them
-            if (allParameters.result.length <= 0) {
-                let success = 0;
-                defaultParameterValues.forEach(parameter => {
-                    const request = parameters.add(parameter);
-                    request.onsuccess = () => {
-                        success++;
-                        if(success >= defaultParameterValues.length) {
-                            resolve(loodusDb.db);
-                        }
-                    };
+            // create in the db the default parameters if they don't exist
+            const savedParameters = allParameters.result;
 
-                    request.onerror = () => {
-                        reject(request.error);
-                    };
-                });
-            } else {
-                resolve(loodusDb.db);
+            let updatedParameters = 0;
+            const checkResolvingPromise = () => {
+                updatedParameters++;
+                if (updatedParameters >= defaultParameterValues.length) {
+                    resolve(loodusDb.db);
+                }
             }
+            defaultParameterValues.forEach((defaultParameter) => {
+                const savedParameter = savedParameters.find((p) => p.id === defaultParameter.id);
+
+                // we don't have the parameter registered, we create it
+                if (!savedParameter) {
+                    const request = parameters.add(defaultParameter);
+                    request.onsuccess = checkResolvingPromise;
+                    request.onerror = reject;
+                } else {
+                    // we have the parameter registered, we check if we need to had more values
+
+                    // check if at least one value is missing
+                    const hasMissingDefaultValues = Object.keys(defaultParameter.data).some((key) => {
+                        return !savedParameter.data.hasOwnProperty(key);
+                    });
+
+                    if (hasMissingDefaultValues) {
+                        // this new object will automatically have previous saved values and new default values
+                        const newParameterData = {
+                            ...defaultParameter.data,
+                            ...savedParameter.data,
+                        }
+                        loodusDb.set('parameters', defaultParameter.id, newParameterData, true)
+                            .then(checkResolvingPromise)
+                            .catch(e => reject(e));
+                    } else {
+                        checkResolvingPromise();
+                    }
+                }
+            });
         }
     });
 }
