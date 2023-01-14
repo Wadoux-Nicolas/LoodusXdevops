@@ -11,6 +11,7 @@
             width: 150px;
             border-radius: calc(150px / 2);
             background: unquote(themed(dark-white) + '80');
+            user-select: none;
         }
 
         #unlock-by-password {
@@ -40,7 +41,7 @@
                 }
             }
         }
-        #pattern-canvas {
+        #pattern-canvas, #free-unlock-button {
             margin-top: 40px;
         }
         #error-code-message, #error-lock-db-message {

@@ -16,7 +16,7 @@ class LoodusDb {
         const loodusDocuments = ['parameters', 'calculator'];
 
         request.onupgradeneeded = (e) => {
-            for(let document of loodusDocuments) {
+            for (let document of loodusDocuments) {
                 if (!e.target.result.objectStoreNames.contains(document)) { // if there's no "parameters" store
                     e.target.result.createObjectStore(document, {keyPath: 'id'}); // create it
                 }
@@ -37,6 +37,7 @@ class LoodusDb {
 
     // usage example
     // loodusDb.getAll('parameters').then(r => console.log(r));
+    // be-careful, result can be null !
     getAll(document, query = null) {
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction(document, 'readwrite');
@@ -48,12 +49,13 @@ class LoodusDb {
 
     // usage example
     // loodusDb.get('parameters', 'hourParameters').then(r => console.log(r));
+    // be-careful, result can be null !
     get(document, query) {
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction(document, 'readwrite');
             const request = transaction.objectStore(document).get(query);
             request.onerror = e => reject(e.target.error);
-            request.onsuccess = e => e.target.result ? resolve(e.target.result) : reject(e.target.result);
+            request.onsuccess = e => resolve(e.target.result);
         });
     }
 
@@ -99,6 +101,39 @@ class LoodusDb {
 
 export default LoodusDb;
 
+// function used to create a new instance of the database, filled with default values
+export async function initDb() {
+    const loodusDb = new LoodusDb();
+    await loodusDb.openDb();
+    const parametersTransaction = loodusDb.db.transaction("parameters", "readwrite");
+    const parameters = parametersTransaction.objectStore("parameters");
+    const allParameters = parameters.getAll();
+
+    return new Promise((resolve, reject) => {
+        allParameters.onsuccess = () => {
+            // If there's no parameters in the db, create them
+            if (allParameters.result.length <= 0) {
+                let success = 0;
+                defaultParameterValues.forEach(parameter => {
+                    const request = parameters.add(parameter);
+                    request.onsuccess = () => {
+                        success++;
+                        if(success >= defaultParameterValues.length) {
+                            resolve(loodusDb.db);
+                        }
+                    };
+
+                    request.onerror = () => {
+                        reject(request.error);
+                    };
+                });
+            } else {
+                resolve(loodusDb.db);
+            }
+        }
+    });
+}
+
 export const defaultParameterValues = [
     {
         id: 'dateParameters',
@@ -133,8 +168,8 @@ export const defaultParameterValues = [
     {
         id: 'lockParameters',
         data: {
-            unlockMethod: 'pattern', // pattern or password or free (no lock)
-            value: '123456789',
+            unlockMethod: 'free', // pattern or password or free (no lock)
+            value: null,
         }
     },
     {

@@ -43,12 +43,14 @@ class Calculator extends HTMLElement {
         await this.loodusDb.openDb()
             .catch(error => console.error(error ?? "Erreur lors de la connexion à la base de données"));
 
-        this.loodusDb.get('calculator', 'history').then(result => {
-            this.savedResults = result.data;
-            for (let savedResult of this.savedResults) {
-                this.updateHistory(savedResult);
-            }
-        });
+        this.loodusDb.get('calculator', 'history')
+            .then(result => {
+                this.savedResults = result?.data ?? [];
+                for (let savedResult of this.savedResults) {
+                    this.updateHistory(savedResult);
+                }
+            })
+            .catch(error => console.error(error ?? "Erreur lors de la récupération de l'historique, ou il est vide"));
 
         this.querySelector('#history-toggle').addEventListener('click', () => {
             this.historyContainerElement.classList.toggle('hidden');

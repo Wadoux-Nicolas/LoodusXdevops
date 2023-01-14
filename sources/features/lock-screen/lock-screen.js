@@ -24,7 +24,7 @@ class LockScreen extends HTMLElement {
             .then(() => {
                 return this.loodusDb.get('parameters', 'lockParameters')
             })
-            .then(result => this.lockParameters = result.data)
+            .then(result => this.lockParameters = result?.data)
             .catch(error => {
                 console.error(error ?? "Erreur lors de la connexion à la base de données");
                 this.querySelector('#error-lock-db-message').classList.remove('hidden');
@@ -36,10 +36,6 @@ class LockScreen extends HTMLElement {
         }
 
         const unlockMethod = this.lockParameters.unlockMethod;
-
-        if (unlockMethod === 'free') {
-            this.success(); // no lock on this device
-        }
 
         try {
             this.querySelector(`#unlock-by-${unlockMethod}`).classList.remove("hidden");
@@ -53,6 +49,10 @@ class LockScreen extends HTMLElement {
             this.submit('password', this.querySelector('#unlock-password-input').value);
         });
 
+        this.querySelector('#free-unlock-button').addEventListener('click', event => {
+            this.success();
+        });
+
         document.addEventListener('pattern-lock-submitted', event => {
             this.submit('pattern', event.detail.pattern);
         });
@@ -62,7 +62,7 @@ class LockScreen extends HTMLElement {
     }
 
     submit(type, value) {
-        if (value === this.lockParameters.value) {
+        if (value === this.lockParameters.value || type === 'free') {
             this.success();
         } else {
             this.error();
@@ -72,7 +72,7 @@ class LockScreen extends HTMLElement {
     }
 
     success() {
-        document.body.classList.remove('is-locked');
+        document.dispatchEvent(new CustomEvent('unlock-screen'));
         this.querySelector('#error-code-message').classList.add('hidden');
     }
 

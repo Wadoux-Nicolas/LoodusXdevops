@@ -23,27 +23,11 @@
         <script src="./features/parameters/parameters.js" type="module"></script>
         <script src="./shared/components/pattern-lock/pattern-lock.js" type="module"></script>
     </head>
-    <body class="is-locked">
+    <body class="is-locked theme--light">
         <main>
-            <section id="home-unlocked">
-                <navbar-component></navbar-component>
-                <button>Toggle mode</button>
-                <home-feature></home-feature>
-                <modal-component></modal-component>
-            </section>
-            <section id="home-locked">
-                <lock-screen-feature></lock-screen-feature>
+            <section class="os-loading">
+                <p class="text3">Démarrage de Loodus ...</p>
             </section>
         </main>
-        <footer>
-            <img src="./shared/assets/images/loodus_text.png" alt="Loodus" class="loodus-icon">
-            <button id="lock-screen-button">
-
-            </button>
-            <button id="toggle-home-mode">
-                <span class="material-icons toggle-home-mode-icon">open_in_full</span>
-                <span class="material-icons hidden toggle-home-mode-icon">close_fullscreen</span>
-            </button>
-        </footer>
     </body>
 </html>
