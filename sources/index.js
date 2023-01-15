@@ -1,5 +1,13 @@
 import './index.scss';
 import LoodusDb, {defaultParameterValues} from "./shared/js/loodusDb";
+import * as Sentry from "@sentry/browser";
+import { BrowserTracing } from "@sentry/tracing";
+
+Sentry.init({
+    dsn: "https://ff6681d393ca4380aafb28ed72ac62a2@o4504508123512832.ingest.sentry.io/4504508131901440",
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1.0,
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     const body = document.body;
