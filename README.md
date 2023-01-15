@@ -11,13 +11,13 @@
 docker-compose up --detach
 ```
 
-### Node Packages Installation
+### Node Packages Installation (already done when building container)
 
 ```bash
 docker-compose exec node npm install
 ```
 
-### Development Server Startup
+### Development Server Startup (already done when building container)
 
 ```bash
 docker-compose exec node npm start

@@ -1,4 +1,5 @@
 @import "sources/shared/assets/styles/theme";
+@import "./shared/assets/styles/display.scss";
 
 @font-face {
     font-family: "Inter";
@@ -10,8 +11,8 @@
     margin: 0;
     padding: 0;
     font-family: "Inter";
-    -webkit-tap-highlight-color: transparent;
     font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -23,7 +24,7 @@ html, body {
         background-blend-mode: hard-light;
 
         color: themed(text-color);
-        background: themed(dark-white) url("./shared/assets/images/background.svg") no-repeat;
+        background: themed(dark-white) url("./shared/assets/images/background.jpg") no-repeat;
         background-size: cover;
 
         main {
@@ -48,24 +49,29 @@ html, body {
             }
 
             #toggle-home-mode {
-                background: themed(bg-color);
-                border: none;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-
                 span {
                     rotate: 90deg;
-                    font-weight: bolder;
-                    color: themed(text-color);
                 }
             }
         }
     }
 }
 
-@import "./shared/assets/styles/display.scss";
+
+.is-locked {
+    background-blend-mode: luminosity !important;
+    .hidden-when-locked {
+        display: none !important;
+    }
+}
+
+.os-loading {
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.footer-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}

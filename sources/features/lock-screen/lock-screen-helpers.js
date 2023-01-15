@@ -1,0 +1,1 @@
+export const lockScreenTagName = "lock-screen-feature";

@@ -1,6 +1,6 @@
 import "./chronometer.scss"
 import {chronometerTagName} from "./chronometer-helpers";
-import {_, getUrl} from "../../../shared/helper";
+import {_, getUrl} from "../../../shared/js/helper";
 
 
 class Chronometer extends HTMLElement {

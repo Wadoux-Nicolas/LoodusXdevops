@@ -3,7 +3,11 @@
 #calculator {
     @include theme() {
         text-align: center;
-        #modal-content {
+        #error-calculator-container {
+            margin-bottom: 20px;
+        }
+
+        #calculator-modal-content {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-evenly;
@@ -52,6 +56,10 @@
                     }
                 }
 
+            }
+
+            #history-toggle {
+                margin: auto;
             }
         }
         #calculator-history-container {
