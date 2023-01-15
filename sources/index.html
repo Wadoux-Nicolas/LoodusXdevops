@@ -12,6 +12,7 @@
         <script src="./index.js" type="module"></script>
         <script src="./shared/components/progress-bar/progress-bar.js" type="module"></script>
         <script src="./features/home/home.js" type="module"></script>
+        <script src="./features/lock-screen/lock-screen.js" type="module"></script>
         <script src="./shared/components/navbar/navbar.js" type="module"></script>
         <script src="./features/tic-tac-toe/tic-tac-toe.js" type="module"></script>
         <script src="./features/clock/clock.js" type="module"></script>
@@ -20,20 +21,13 @@
         <script src="./features/calculator/calculator.js" type="module"></script>
         <script src="./shared/components/modal/modal.js" type="module"></script>
         <script src="./features/parameters/parameters.js" type="module"></script>
+        <script src="./shared/components/pattern-lock/pattern-lock.js" type="module"></script>
     </head>
-    <body>
+    <body class="is-locked theme--light">
         <main>
-            <navbar-component></navbar-component>
-            <button>Toggle mode</button>
-            <home-feature></home-feature>
-            <modal-component></modal-component>
+            <section class="os-loading">
+                <p class="text3">Démarrage de Loodus ...</p>
+            </section>
         </main>
-        <footer>
-            <img src="./shared/assets/images/loodus_text.png" alt="Loodus" class="loodus-icon">
-            <button id="toggle-home-mode">
-                <span class="material-icons toggle-home-mode-icon">open_in_full</span>
-                <span class="material-icons hidden toggle-home-mode-icon">close_fullscreen</span>
-            </button>
-        </footer>
     </body>
 </html>

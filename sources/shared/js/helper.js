@@ -1,4 +1,6 @@
 // create a new html element by its tag, with given content, in its parent.
+import bobAvatar from "../assets/images/bob.png";
+
 export function _(tag, content, parent, id = null, customClass = null) {
     let element = document.createElement(tag);
 
@@ -45,4 +47,11 @@ export function sendNotification(message, options = {}) {
 export function getUrl(url) {
     const base = import.meta.env.DEV ? './' : '/sources/'
     return `${base}${url}`;
+}
+
+export function updateAvatar() {
+    // ------ Set right avatar images if we want to be able to change it later ------
+    document.querySelectorAll(".avatar").forEach(img => {
+        img.src = bobAvatar;
+    });
 }

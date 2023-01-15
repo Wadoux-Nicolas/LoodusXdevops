@@ -1,0 +1,1 @@
+export const patternLockTagName = "pattern-lock-component";
