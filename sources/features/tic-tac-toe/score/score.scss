@@ -8,6 +8,7 @@
             flex-direction: row;
             gap: 50px;
             justify-content: space-evenly;
+            height: 100%;
         }
 
         .player1, .player2 {
@@ -42,6 +43,22 @@
                 font-size: 60px;
                 color: themed(dark-grey);
             }
+        }
+
+        .score {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vertical-line {
+            border-left: 2px solid permanent(black-color);
+        }
+
+        .winner {
+            color: themed(accent);
         }
     }
 }

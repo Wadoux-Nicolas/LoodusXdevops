@@ -1,10 +1,13 @@
 import "./game.scss"
-import {getUrl} from "../../../shared/helper";
 import {gameTagName} from "./game-helpers";
 import {openModal} from "../../../shared/components/modal/modal-helpers";
 import {scoreTagName} from "../score/score-helpers";
+import {getUrl, vibrate} from "../../../shared/js/helper";
+import LoodusDb from "../../../shared/js/loodusDb";
 
 class Game extends HTMLElement {
+
+    loodusDb = new LoodusDb();
 
     winningCombination = [
         [0, 1, 2],
@@ -58,16 +61,21 @@ class Game extends HTMLElement {
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
+        await this.loodusDb.openDb()
+            .catch(error => console.error(error ?? "Erreur lors de la connexion à la base de données"));
+
         this.onCellClick = this.onCellClick.bind(this);
 
         this.startGame();
 
         this.initButton.addEventListener("click", () => {
+            vibrate();
             this.startGame();
         });
 
         this.scoreButton.addEventListener("click", () => {
-           openModal(scoreTagName);
+            vibrate();
+            openModal(scoreTagName);
         });
     }
 
@@ -87,6 +95,7 @@ class Game extends HTMLElement {
     }
 
     onCellClick(e) {
+        vibrate();
         const cell = e.target
         const currentPlayerSymbol = this.isPlayerTwoTurn ? this.playerTwoSymbol : this.playerOneSymbol;
         this.placeSymbol(cell, currentPlayerSymbol);
@@ -114,6 +123,19 @@ class Game extends HTMLElement {
         } else {
             this.endGameButton.textContent = this.isPlayerTwoTurn ? "Bravo Joueur 2 !" : "Bravo Joueur 1 !";
             this.endGameButton.classList.remove("hidden");
+
+            const scorePlayer1 = {
+                player: "Joueur 1",
+                score: this.isPlayerTwoTurn ? 0 : 1,
+            };
+
+            const scorePlayer2 = {
+                player: "Joueur 2",
+                score: this.isPlayerTwoTurn ? 1 : 0,
+            };
+
+            this.saveNewResult(scorePlayer1);
+            this.saveNewResult(scorePlayer2);
         }
         this.cells.forEach(cell => {
             cell.removeEventListener("click",  this.onCellClick, true);
@@ -121,6 +143,11 @@ class Game extends HTMLElement {
         });
         this.board.classList.remove(this.playerOneSymbol);
         this.board.classList.remove(this.playerTwoSymbol);
+    }
+
+    saveNewResult(score) {
+        this.loodusDb.set('tic-tac-toe', 'score', [score])
+            .catch(error => console.log(error ?? "Enregistrement de l'historique impossible en base de données"))
     }
 
     placeSymbol(cell, currentPlayerSymbol) {

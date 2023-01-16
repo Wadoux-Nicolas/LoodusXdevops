@@ -13,7 +13,7 @@ class LoodusDb {
         }
 
         const request = window.indexedDB.open("loodusDb", 1);
-        const loodusDocuments = ['parameters', 'calculator'];
+        const loodusDocuments = ['parameters', 'calculator', 'tic-tac-toe'];
 
         request.onupgradeneeded = async (e) => {
             for (let document of loodusDocuments) {

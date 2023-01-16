@@ -1,6 +1,9 @@
 import "./tic-tac-toe.scss"
 import {ticTacToeTagName} from "./tic-tac-toe-helpers";
-import {getUrl} from "../../shared/helper";
+import {getUrl} from "../../shared/js/helper";
+import {openModal} from "../../shared/components/modal/modal-helpers";
+import {gameTagName} from "./game/game-helpers";
+import {scoreTagName} from "./score/score-helpers";
 
 class TicTacToe extends HTMLElement {
     constructor() {
