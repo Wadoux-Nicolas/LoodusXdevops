@@ -3,8 +3,12 @@ import "./navbar.scss";
 import {openModal} from "../modal/modal-helpers";
 import {parametersTagName} from "../../../features/parameters/parameters-helper";
 import {getUrl} from "../../js/helper";
+import LoodusDb from "../../js/loodusDb";
 
 class Navbar extends HTMLElement {
+
+    loodusDb = new LoodusDb();
+
     constructor() {
         super();
     }
@@ -33,20 +37,46 @@ class Navbar extends HTMLElement {
         return this.querySelector("#networkIcon");
     }
 
+    get vibrateIcon() {
+        return this.querySelector("#vibrate");
+    }
+
+    get crosswordIcon() {
+        return this.querySelector("#crossword");
+    }
+
     async connectedCallback() {
         await fetch(getUrl("shared/components/navbar/navbar.html"))
             .then(response => response.text())
             .then(html => this.innerHTML = html);
+
+        await this.loodusDb.openDb()
+            .catch(error => console.error(error ?? "Erreur lors de la connexion à la base de données"));
+
+        this.loodusDb.get('parameters', 'vibrationParameters')
+            .then(result => {
+                const vibrationParameters = result?.data ?? [];
+                this.updateVibrateIcon(vibrationParameters);
+            })
+            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
+
+        this.loodusDb.get('parameters', 'networkLatencyParameters')
+            .then(result => {
+                const networkLatencyParameters = result?.data ?? [];
+                this.setNetworkStatus(networkLatencyParameters.domain);
+                setInterval(() => {
+                    this.setNetworkStatus(networkLatencyParameters.domain);
+                }, 1000);
+            })
+            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
 
         this.querySelector("#parameters").addEventListener("click", () => {
             openModal(parametersTagName);
         });
 
         this.setDateAndTime();
-        this.setNetworkStatus();
         setInterval(() => {
             this.setDateAndTime();
-            this.setNetworkStatus();
         }, 1000);
 
         window.addEventListener('resize', () => this.setDateAndTime())
@@ -108,18 +138,30 @@ class Navbar extends HTMLElement {
         }
     }
 
-    setNetworkStatus() {
-        if (navigator.connection && isFinite(navigator.connection.rtt)) {
-            const rtt = navigator.connection.rtt;
-            this.latenceLevel.textContent = rtt + "ms";
+    setNetworkStatus(url) {
+        url = "https://" + url;
+        const startTime = Date.now();
+        fetch(url)
+            .then(response => {
+                const latency = Date.now() - startTime;
+                this.latenceLevel.textContent = latency + "ms";
+                if (latency <= 100) {
+                    this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
+                } else if (latency <= 200) {
+                    this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
+                } else {
+                    this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
+                }
+            })
+            .catch(error => console.log(error));
+    }
 
-            if (rtt <= 100) {
-                this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
-            } else if (rtt <= 200) {
-                this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
-            } else {
-                this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
-            }
+    updateVibrateIcon(vibrationParameters) {
+        if (vibrationParameters.displayVibrationStatus === true){
+            this.vibrateIcon.classList.remove('hidden');
+        }
+        if(vibrationParameters.enableVibration === false){
+            this.crosswordIcon.classList.remove('hidden');
         }
     }
 }
