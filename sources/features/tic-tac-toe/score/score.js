@@ -6,7 +6,7 @@ import LoodusDb from "../../../shared/js/loodusDb";
 class Score extends HTMLElement {
 
     loodusDb = new LoodusDb();
-    savedResults = [];
+    savedScores = [];
 
     constructor() {
         super();
@@ -30,12 +30,12 @@ class Score extends HTMLElement {
 
         this.loodusDb.get('tic-tac-toe', 'score')
             .then(result => {
-                this.savedResults = result?.data ?? [];
-                for (let savedResult of this.savedResults) {
-                    this.updateScore(savedResult);
+                this.savedScores = result?.data ?? [];
+                for (let savedScores of this.savedScores) {
+                    this.updateScore(savedScores);
                 }
             })
-            .catch(error => console.error(error ?? "Erreur lors de la récupération des scores, ou il est vide"));
+            .catch(error => console.error(error ?? "Erreur lors de la récupération des scores"));
 
     }
 

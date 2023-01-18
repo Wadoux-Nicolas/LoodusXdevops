@@ -83,7 +83,6 @@ class Game extends HTMLElement {
         this.isPlayerTwoTurn = false;
         this.endGameButton.classList.add("hidden");
         this.playerOne.classList.remove("opacity");
-        this.playerTwo.classList.remove("opacity");
         this.playerTwo.classList.add("opacity");
         this.cells.forEach(cell => {
             cell.classList.remove(this.playerOneSymbol);
@@ -147,7 +146,7 @@ class Game extends HTMLElement {
 
     saveNewResult(score) {
         this.loodusDb.set('tic-tac-toe', 'score', [score])
-            .catch(error => console.log(error ?? "Enregistrement de l'historique impossible en base de données"))
+            .catch(error => console.log(error ?? "Enregistrement du score impossible en base de données"))
     }
 
     placeSymbol(cell, currentPlayerSymbol) {
