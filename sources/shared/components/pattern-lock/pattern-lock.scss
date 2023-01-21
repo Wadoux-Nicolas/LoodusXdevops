@@ -1,0 +1,11 @@
+@import "sources/shared/assets/styles/theme";
+
+#pattern-lock {
+    @include theme() {
+        #pattern-canvas {
+            background: unquote(permanent(dark-white) + '20');
+            border-radius: 8px;
+            touch-action: none;
+        }
+    }
+}

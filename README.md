@@ -11,17 +11,19 @@
 docker-compose up --detach
 ```
 
-### Node Packages Installation
+### Node Packages Installation (already done when building container)
 
 ```bash
 docker-compose exec node npm install
 ```
 
-### Development Server Startup
+### Development Server Startup (already done when building container)
 
 ```bash
 docker-compose exec node npm start
 ```
+
+Go on [http://localhost:8000](http://localhost:8000) to see the magic
 
 ### Create a new feature or component
 
@@ -40,3 +42,8 @@ node bin/generator -help
 ```bash
 docker-compose down --remove-orphans --volumes --timeout 0
 ```
+
+## How to build production
+
+When merging in master, a new version is automatically built and deployed on [https://loodus.nicolas-wadoux.fr](https://loodus.nicolas-wadoux.fr)
+(Check the github action to know when it's done)

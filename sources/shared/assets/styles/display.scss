@@ -7,18 +7,31 @@
 // -------------- BUTTONS --------------
 
 .btn-primary, .btn-secondary, .btn-accent {
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 12px 24px;
-    background-position: center;
-    transition: background 0.8s;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 166px;
+  transition: background 0.8s, transform 0.2s;
 
-    &.disabled, &[disabled] {
-        opacity: 0.5;
-    }
+  &.disabled, &[disabled] {
+    opacity: 0.5;
+  }
+
+  &:hover {
+      transform: scale(1.05);
+  }
+}
+
+.large-button {
+    width: 230px;
 }
 
 .btn-primary {
@@ -76,27 +89,44 @@
 }
 
 .btn-pulsed {
-    animation: pulse 1s infinite;
+  animation: pulse 1s infinite;
+}
+
+.btn-icon {
+  background: themed(bg-color);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  span {
+    font-weight: bolder;
+    color: themed(text-color);
+  }
 }
 
 // -------------- ANIMATIONS --------------
 
 @keyframes pulse {
-    0% {
-        border-color: themed(primary);
-    }
-    50% {
-        border-color: unquote(themed(primary) + '95');
-    }
-    100% {
-        border-color: themed(primary);
-    }
+  0% {
+    border-color: themed(primary);
+  }
+  50% {
+    border-color: unquote(themed(primary) + '95');
+  }
+  100% {
+    border-color: themed(primary);
+  }
 }
 
 // -------------- LAYOUT --------------
 
 // generate helper classes for margins and paddings
-$px: (0,5,10,15,20,25,30,35,40);
+$px: (0, 5, 10, 15, 20, 25, 30, 35, 40);
 @each $i in $px {
   .m-#{$i} {
     margin: $i+px;

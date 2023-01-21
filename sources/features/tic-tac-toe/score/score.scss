@@ -1,26 +1,14 @@
 @import "sources/shared/assets/styles/theme";
 
-#tic-tac-toe {
+#score {
     @include theme() {
 
         .container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 50px;
-
-            .game {
-                display: flex;
-                justify-content: space-evenly;
-                align-items: center;
-            }
-
-            .actions {
-                display: flex;
-                gap: 20px;
-                justify-content: center;
-                flex-direction: column;
-                align-items: center;
-            }
+            justify-content: space-evenly;
+            height: 100%;
         }
 
         .player1, .player2 {
@@ -55,6 +43,33 @@
                 font-size: 60px;
                 color: themed(dark-grey);
             }
+        }
+
+        .score {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vertical-line {
+            border-left: 1px solid permanent(black-color);
+        }
+
+        .winner {
+            color: themed(accent);
+        }
+
+        .no-score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #backButton:hover {
+            cursor: pointer;
         }
     }
 }

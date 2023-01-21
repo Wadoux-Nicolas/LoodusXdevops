@@ -1,6 +1,6 @@
 import "./progress-bar.scss"
 import {progressBarTagName} from "./progress-bar-helpers";
-import {getUrl} from "../../helper";
+import {getUrl} from "../../js/helper";
 
 class ProgressBar extends HTMLElement {
     static get observedAttributes() {

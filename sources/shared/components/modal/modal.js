@@ -1,6 +1,6 @@
 import './modal.scss';
 import {closeModal, modalTagName} from "./modal-helpers";
-import {getUrl, vibrate} from "../../helper";
+import {getUrl, vibrate} from "../../js/helper";
 
 
 class Modal extends HTMLElement {

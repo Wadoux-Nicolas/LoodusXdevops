@@ -1,6 +1,9 @@
 import "./tic-tac-toe.scss"
 import {ticTacToeTagName} from "./tic-tac-toe-helpers";
-import {getUrl} from "../../shared/helper";
+import {getUrl} from "../../shared/js/helper";
+import {openModal} from "../../shared/components/modal/modal-helpers";
+import {gameTagName} from "./game/game-helpers";
+import {scoreTagName} from "./score/score-helpers";
 
 class TicTacToe extends HTMLElement {
     constructor() {
@@ -12,8 +15,15 @@ class TicTacToe extends HTMLElement {
             .then(response => response.text())
             .then(html => this.innerHTML = html);
 
-        // Write your code here, it will be executed when the component is loaded
+        this.querySelector('#playGame').addEventListener("click", () => {
+            openModal(gameTagName);
+        });
+
+        this.querySelector('#score').addEventListener("click", () => {
+            openModal(scoreTagName);
+        });
     }
+
 }
 
 customElements.define(ticTacToeTagName, TicTacToe);
