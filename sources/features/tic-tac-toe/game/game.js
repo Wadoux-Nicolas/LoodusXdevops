@@ -28,8 +28,8 @@ class Game extends HTMLElement {
         super();
     }
 
-    get cells() {
-        return this.querySelectorAll('[data-cell]')
+    get squares() {
+        return this.querySelectorAll('.square')
     }
 
     get board() {
@@ -84,7 +84,7 @@ class Game extends HTMLElement {
         this.endGameButton.classList.add("hidden");
         this.playerOne.classList.remove("opacity");
         this.playerTwo.classList.add("opacity");
-        this.cells.forEach(cell => {
+        this.squares.forEach(cell => {
             cell.classList.remove(this.playerOneSymbol);
             cell.classList.remove(this.playerTwoSymbol);
             cell.removeEventListener("click",  this.onCellClick, true);
@@ -94,22 +94,24 @@ class Game extends HTMLElement {
     }
 
     onCellClick(e) {
-        vibrate();
         const cell = e.target
-        const currentPlayerSymbol = this.isPlayerTwoTurn ? this.playerTwoSymbol : this.playerOneSymbol;
-        this.placeSymbol(cell, currentPlayerSymbol);
-        if (this.checkWin(currentPlayerSymbol)) {
-            this.endGame(false);
-        } else if (this.cellSymbol()) {
-            this.endGame(true);
-        } else {
-            this.swapTurns();
-            this.setBoardHoverClass();
+        if(cell.classList.contains(this.playerOneSymbol) === false && cell.classList.contains(this.playerTwoSymbol) === false) {
+            vibrate();
+            const currentPlayerSymbol = this.isPlayerTwoTurn ? this.playerTwoSymbol : this.playerOneSymbol;
+            this.placeSymbol(cell, currentPlayerSymbol);
+            if (this.checkWin(currentPlayerSymbol)) {
+                this.endGame(false);
+            } else if (this.isCellSymbol()) {
+                this.endGame(true);
+            } else {
+                this.swapTurns();
+                this.setBoardHoverClass();
+            }
         }
     }
 
-    cellSymbol() {
-        return [...this.cells].every(cell => {
+    isCellSymbol() {
+        return [...this.squares].every(cell => {
             return cell.classList.contains(this.playerOneSymbol) || cell.classList.contains(this.playerTwoSymbol)
         })
     }
@@ -136,7 +138,7 @@ class Game extends HTMLElement {
             this.saveNewResult(scorePlayer1);
             this.saveNewResult(scorePlayer2);
         }
-        this.cells.forEach(cell => {
+        this.squares.forEach(cell => {
             cell.removeEventListener("click",  this.onCellClick, true);
             cell.classList.add("no-hover");
         });
@@ -172,7 +174,7 @@ class Game extends HTMLElement {
     checkWin(currentPlayerSymbol) {
         return this.winningCombination.some(combination => {
             return combination.every(index => {
-                return this.cells[index].classList.contains(currentPlayerSymbol);
+                return this.squares[index].classList.contains(currentPlayerSymbol);
             })
         })
     }

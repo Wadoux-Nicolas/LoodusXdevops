@@ -48,7 +48,7 @@
         .score {
             margin-top: 20px;
             display: flex;
-            flex-direction: column;
+            flex-direction: column-reverse;
             align-items: center;
             gap: 10px;
         }
@@ -59,6 +59,17 @@
 
         .winner {
             color: themed(accent);
+        }
+
+        .no-score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #backButton:hover {
+            cursor: pointer;
         }
     }
 }
