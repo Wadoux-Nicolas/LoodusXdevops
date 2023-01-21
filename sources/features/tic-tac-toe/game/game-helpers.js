@@ -1,0 +1,1 @@
+export const gameTagName = "game-feature";

@@ -1,0 +1,153 @@
+@import "sources/shared/assets/styles/theme";
+
+#game {
+    @include theme() {
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+
+            .game {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .actions {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+            }
+        }
+
+
+        .opacity {
+            opacity: 0.5;
+        }
+
+        .player1, .player2 {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .player1 {
+            .card {
+                border: themed(primary) solid 2px;
+            }
+            color: themed(primary);
+        }
+
+        .player2 {
+            .card {
+                border: themed(accent) solid 2px;
+            }
+            color: themed(accent);
+        }
+
+        .card {
+            border-radius: 15px;
+            height: 70px;
+            width: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .material-icons {
+                font-size: 60px;
+                color: themed(dark-grey);
+            }
+        }
+
+        .board {
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            justify-items: center;
+            align-items: center;
+            grid-template-columns: repeat(3, auto);
+            margin-bottom: 60px;
+        }
+
+        .board.x .cell:not(.o):not(.x):hover {
+            background: linear-gradient(to top right, transparent calc(50% - 10px / 2), permanent(dark-grey) calc(50% - 10px / 2) calc(50% + 10px / 2), transparent calc(50% + 10px / 2)),
+            linear-gradient(to bottom right, transparent calc(50% - 10px / 2), permanent(dark-grey) calc(50% - 10px / 2) calc(50% + 10px / 2), transparent calc(50% + 10px / 2));
+            background-size: 80% 80%;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.5;
+        }
+
+        .cell:not(.o).x {
+            background: linear-gradient(to top right, transparent calc(50% - 10px / 2), permanent(dark-grey) calc(50% - 10px / 2) calc(50% + 10px / 2), transparent calc(50% + 10px / 2)),
+            linear-gradient(to bottom right, transparent calc(50% - 10px / 2), permanent(dark-grey) calc(50% - 10px / 2) calc(50% + 10px / 2), transparent calc(50% + 10px / 2));
+            background-size: 80% 80%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .cell {
+            width: 80px;
+            height: 80px;
+            border: 0.5px solid themed(dark-grey);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cell.x, .cell.o {
+            cursor: not-allowed;
+        }
+
+        .no-hover {
+            cursor: not-allowed;
+        }
+
+        .board.o .cell:not(.o):not(.x):hover {
+            background: radial-gradient(permanent(dark-grey) 60%, transparent 60%);
+            opacity: 0.5;
+        }
+
+        .cell:not(.x).o {
+            background: radial-gradient(permanent(dark-grey) 60%, transparent 60%);
+        }
+
+        .cell:nth-child(1), .cell:nth-child(2), .cell:nth-child(3) {
+            border-top: none;
+        }
+
+        .cell:nth-child(1), .cell:nth-child(4), .cell:nth-child(7) {
+            border-left: none;
+        }
+
+        .cell:nth-child(3), .cell:nth-child(6), .cell:nth-child(9) {
+            border-right: none;
+        }
+
+        .cell:nth-child(7), .cell:nth-child(8), .cell:nth-child(9) {
+            border-bottom: none;
+        }
+
+        .endGame {
+            border-radius: 20px;
+            background-color: themed(primary);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 50px;
+            color: themed(bg-color);
+        }
+
+        @include mobile-large {
+            .container {
+                .game {
+                    margin-bottom: 40px;
+                }
+            }
+        }
+
+    }
+}
