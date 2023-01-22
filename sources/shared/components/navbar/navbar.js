@@ -53,6 +53,27 @@ class Navbar extends HTMLElement {
         await this.loodusDb.openDb()
             .catch(error => console.error(error ?? "Erreur lors de la connexion à la base de données"));
 
+        this.loodusDb.get('parameters', 'dateParameters')
+            .then(result => {
+                const dateParameters = result?.data ?? [];
+                this.setDate(dateParameters);
+                setInterval(() => {
+                    this.setDate(dateParameters);
+                }, 3600000);
+            })
+            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
+
+        this.loodusDb.get('parameters', 'hourParameters')
+            .then(result => {
+                const timeParameters = result?.data ?? [];
+                this.setTime(timeParameters);
+                setInterval(() => {
+                    this.setTime(timeParameters);
+                }, 1000);
+            })
+            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
+
+
         this.loodusDb.get('parameters', 'vibrationParameters')
             .then(result => {
                 const vibrationParameters = result?.data ?? [];
@@ -63,9 +84,9 @@ class Navbar extends HTMLElement {
         this.loodusDb.get('parameters', 'networkLatencyParameters')
             .then(result => {
                 const networkLatencyParameters = result?.data ?? [];
-                this.setNetworkStatus(networkLatencyParameters.domain);
+                this.setNetworkStatus(networkLatencyParameters);
                 setInterval(() => {
-                    this.setNetworkStatus(networkLatencyParameters.domain);
+                    this.setNetworkStatus(networkLatencyParameters);
                 }, 1000);
             })
             .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
@@ -74,35 +95,52 @@ class Navbar extends HTMLElement {
             openModal(parametersTagName);
         });
 
-        this.setDateAndTime();
-        setInterval(() => {
-            this.setDateAndTime();
-        }, 1000);
-
-        window.addEventListener('resize', () => this.setDateAndTime())
-
         this.initBatteryListeners();
     }
 
-    setDateAndTime() {
-        this.time.textContent = new Date().toLocaleString('fr-FR', {
-            hour: 'numeric',
-            minute: 'numeric'
-        })
+    setTime(timeParameters) {
+        const hour = timeParameters.displayHour;
+        const minute = timeParameters.displayMinute;
+        const second = timeParameters.displaySecond;
 
-        let date = new Date().toLocaleString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long'});
-        date = date.charAt(0).toUpperCase() + date.slice(1);
-        this.checkWidthForDate(date);
+        if(hour !== undefined && minute !== undefined && second !== undefined) {
+            const options = {
+                hour: hour ? 'numeric' : undefined,
+                minute: minute ? 'numeric' : undefined,
+                second: second ? 'numeric' : undefined,
+            }
+            this.time.textContent = new Date().toLocaleString('fr-FR', options);
+        }
+        else {
+            this.time.classList.add('hidden');
+        }
+
     }
 
-    checkWidthForDate(date) {
-        const width = window.innerWidth;
-        if (width < 500) {
-            let shortDate = date.split(' ').slice(0, -1).join(' ');
-            shortDate += " " + new Date().toLocaleString('fr-FR', {month: 'short'});
-            this.date.textContent = shortDate;
-        } else {
-            this.date.textContent = date;
+    setDate(dateParameters) {
+        if(dateParameters.display) {
+            const weekday = dateParameters.displayDay;
+            const day = dateParameters.displayDay;
+            const month = dateParameters.displayMonth;
+            const year = dateParameters.displayYear;
+
+            if(weekday !== undefined && day !== undefined && month !== undefined && year !== undefined) {
+                const options = {
+                    weekday: weekday ? 'long' : undefined,
+                    day: day ? 'numeric' : undefined,
+                    month: month ? 'long' : undefined,
+                    year: year ? 'numeric' : undefined,
+                }
+
+                let date = new Date().toLocaleString('fr-FR', options);
+                if(weekday) {
+                    date = date.charAt(0).toUpperCase() + date.slice(1);
+                }
+                this.date.textContent = date;
+            }
+            else {
+                this.date.classList.add('hidden');
+            }
         }
     }
 
@@ -138,22 +176,25 @@ class Navbar extends HTMLElement {
         }
     }
 
-    setNetworkStatus(url) {
-        url = "https://" + url;
-        const startTime = Date.now();
-        fetch(url)
-            .then(response => {
-                const latency = Date.now() - startTime;
-                this.latenceLevel.textContent = latency + "ms";
-                if (latency <= 100) {
-                    this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
-                } else if (latency <= 200) {
-                    this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
-                } else {
-                    this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
-                }
-            })
-            .catch(error => console.log(error));
+    setNetworkStatus(networkLatencyParameters) {
+        if(networkLatencyParameters.displayNetworkLatency) {
+            let url = networkLatencyParameters.url
+            url = "https://" + url;
+            const startTime = Date.now();
+            fetch(url)
+                .then(response => {
+                    const latency = Date.now() - startTime;
+                    this.latenceLevel.textContent = latency + "ms";
+                    if (latency <= 100) {
+                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
+                    } else if (latency <= 200) {
+                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
+                    } else {
+                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
+                    }
+                })
+                .catch(error => console.log(error));
+        }
     }
 
     updateVibrateIcon(vibrationParameters) {
