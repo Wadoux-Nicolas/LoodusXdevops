@@ -60,6 +60,9 @@ class Navbar extends HTMLElement {
                 setInterval(() => {
                     this.setDate(dateParameters);
                 }, 3600000);
+                document.addEventListener('parameters-updated', event => {
+                    this.setDate(dateParameters)
+                });
             })
             .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
 
@@ -70,6 +73,9 @@ class Navbar extends HTMLElement {
                 setInterval(() => {
                     this.setTime(timeParameters);
                 }, 1000);
+                document.addEventListener('parameters-updated', event => {
+                    this.setTime(timeParameters)
+                });
             })
             .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
 
@@ -78,6 +84,9 @@ class Navbar extends HTMLElement {
             .then(result => {
                 const vibrationParameters = result?.data ?? [];
                 this.updateVibrateIcon(vibrationParameters);
+                document.addEventListener('parameters-updated', event => {
+                    this.updateVibrateIcon(vibrationParameters)
+                });
             })
             .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
 
@@ -88,6 +97,9 @@ class Navbar extends HTMLElement {
                 setInterval(() => {
                     this.setNetworkStatus(networkLatencyParameters);
                 }, 1000);
+                document.addEventListener('parameters-updated', event => {
+                    this.setNetworkStatus(networkLatencyParameters)
+                });
             })
             .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
 
