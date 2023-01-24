@@ -18,7 +18,7 @@ class PatternLock extends HTMLElement {
 
         // trick to be able to remove the event listener without losing the context
         // cf https://stackoverflow.com/questions/10444077/javascript-removeeventlistener-not-working
-        this.onCanvasMouseDown = this.onCanvasMouseDown.bind(this);
+        this.onCanvasPointerDown = this.onCanvasPointerDown.bind(this);
         this.submitPattern = this.submitPattern.bind(this);
 
         this.initPattern();
@@ -40,16 +40,11 @@ class PatternLock extends HTMLElement {
 
         this.drawPattern();
 
-        const actions = ['mouse', 'pointer'];
-        for (const action of actions) {
-            canvas.addEventListener(action + 'down', () => {
-                canvas.addEventListener(action + 'move', this.onCanvasMouseDown, true);
-                if (action === 'mouse') {
-                    canvas.addEventListener('mouseout', this.submitPattern, true); // not working for pointer cf scss
-                }
-            });
-            canvas.addEventListener(action + 'up', () => this.submitPattern());
-        }
+        canvas.addEventListener('pointerdown', () => {
+            canvas.addEventListener('pointermove', this.onCanvasPointerDown, true);
+            canvas.addEventListener('mouseout', this.submitPattern, true); // not working for pointer cf scss
+        });
+        canvas.addEventListener('pointerup', this.submitPattern);
     }
 
     drawPattern() {
@@ -82,10 +77,8 @@ class PatternLock extends HTMLElement {
     }
 
     submitPattern() {
-        this.context.canvas.removeEventListener('mousemove', this.onCanvasMouseDown, true);
         this.context.canvas.removeEventListener('mouseout', this.submitPattern, true);
-        this.context.canvas.removeEventListener('pointermove', this.onCanvasMouseDown, true);
-
+        this.context.canvas.removeEventListener('pointermove', this.onCanvasPointerDown, true);
 
         setTimeout(() => {
             document.dispatchEvent(new CustomEvent('pattern-lock-submitted', {
@@ -98,7 +91,7 @@ class PatternLock extends HTMLElement {
         }, 150); // to quickly see the last circle selected
     }
 
-    onCanvasMouseDown(event) {
+    onCanvasPointerDown(event) {
         // draw line between last circle and current mouse position
         const selectedPatternLength = this.selectedPattern.length;
         if(selectedPatternLength) {
