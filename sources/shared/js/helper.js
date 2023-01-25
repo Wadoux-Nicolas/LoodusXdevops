@@ -55,3 +55,12 @@ export function updateAvatar() {
         img.src = bobAvatar;
     });
 }
+
+export function camelCase(str) {
+    const regex = /[-_|\s]+(.)/g;
+    const lowerStr = str.toLowerCase();
+
+    return lowerStr.replaceAll(regex, (match, chr) => {
+        return chr.toUpperCase();
+    })
+}

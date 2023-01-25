@@ -22,7 +22,7 @@ class LockScreen extends HTMLElement {
 
         await this.loodusDb.openDb()
             .then(() => {
-                return this.loodusDb.get('parameters', 'lockParameters')
+                return this.loodusDb.get('parameters', 'lock')
             })
             .then(result => this.lockParameters = result?.data)
             .catch(error => {

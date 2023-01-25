@@ -2,8 +2,117 @@
     <div id="modal-header">
         <h1 class="text2">Parameters</h1>
     </div>
-    <div id="modal-content">
-        <p>Parameters is working</p>
+    <div id="modal-content" class="modal-content">
+        <div id="parameters-menu" class="menu">
+            <button id="network" class="menu-button active">
+                <span>Réseau</span>
+            </button>
+            <button id="date" class="menu-button">
+                <span>Date</span>
+            </button>
+            <button id="accessibility" class="menu-button">
+                <span>Accessibilité</span>
+            </button>
+            <button id="lock" class="menu-button">
+                <span>Verrouillage</span>
+            </button>
+            <button id="theme" class="menu-button">
+                <span>Thème</span>
+            </button>
+        </div>
+
+        <div id="parameters-content" class="content">
+            <div id="network-param" class="param-section is-open">
+                <div class="param">
+                    <label class="param-label" for="display-latency-network">Afficher latence réseau</label>
+                    <input type="checkbox" id="display-latency-network" name="display-latency-network" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="domain">Nom de domaine du server</label>
+                    <input type="text" id="domain" name="domain" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="delay">Délai de rafraichissement (en secondes)</label>
+                    <input type="number" id="delay" name="delay" class="input-param" />
+                </div>
+            </div>
+            <div id="date-param" class="param-section hidden">
+                <div class="param">
+                    <label class="param-label" for="display-date">Afficher la date</label>
+                    <input type="checkbox" id="display-date" name="display-date" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-year">Afficher l'année</label>
+                    <input type="checkbox" id="display-year" name="display-year" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-month">Afficher le mois</label>
+                    <input type="checkbox" id="display-month" name="display-month" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-day">afficher le jour</label>
+                    <input type="checkbox" id="display-day" name="display-day" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-hours">afficher les heures</label>
+                    <input type="checkbox" id="display-hours" name="display-hours" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-minutes">afficher les minutes</label>
+                    <input type="checkbox" id="display-minutes" name="display-minutes" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-secondes">afficher les secondes</label>
+                    <input type="checkbox" id="display-secondes" name="display-secondes" class="input-param" />
+                </div>
+            </div>
+            <div id="accessibility-param" class="param-section hidden">
+                <div class="param">
+                    <label class="param-label" for="display-vibration-state">Afficher état vibration</label>
+                    <input type="checkbox" id="display-vibration-state" name="display-vibration-state" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="active-vibration">Activer retour haptique de vibration</label>
+                    <input type="checkbox" id="active-vibration" name="active-vibration" class="input-param" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-battery-state">Afficher état de la batterie</label>
+                    <input type="checkbox" id="display-battery-state" name="display-battery-state" class="input-param" />
+                </div>
+            </div>
+            <div id="lock-param" class="param-section hidden">
+                <div class="param">
+                    <label class="param-label" for="unlock-method">Méthode de verrouillage</label>
+                    <select id="unlock-method" class="input-param">
+                        <option value="free">Aucun</option>
+                        <option value="password">Mot de passe</option>
+                        <option value="pattern">Schéma</option>
+                    </select>
+                </div>
+                <div class="param">
+                    <form id="lock-by-password" class="hidden lock-method">
+                        <input type="password" placeholder="Mot de passe" id="lock-password-input" class="input-param">
+                        <button type="submit"><i class="material-icons">arrow_right</i></button>
+                    </form>
+                </div>
+                <div class="param">
+                    <div id="lock-by-pattern" class="hidden lock-method ">
+                        <pattern-lock-component></pattern-lock-component>
+                    </div>
+                </div>
+            </div>
+            <div id="theme-param" class="param-section hidden">
+                <div class="param">
+                    <label class="param-label" for="theme-mode">Activer thème sombre</label>
+                    <select id="theme-mode" class="input-param theme">
+                        <option value="auto">Auto</option>
+                        <option value="dark">Sombre</option>
+                        <option value="light">Clair</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 <script src="./parameters.js" type="module"></script>
