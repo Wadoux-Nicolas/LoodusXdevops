@@ -53,5 +53,39 @@
     #pattern-canvas {
       background: themed('dark-white') !important;
     }
+
+    .material-icons {
+      color: white;
+      vertical-align: middle;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      color: black;
+      padding: 2px 7px;
+      border-radius: 8px;
+      border: 1px solid themed('text-color');
+    }
+
+    input[type=number] {
+      color: black;
+      padding: 2px 7px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid themed('text-color');
+    }
+    button[type=submit] {
+      border-radius: 20px;
+      border: none;
+      background: themed('primary');
+      cursor: pointer;
+    }
+
+    button[type=submit]:hover {
+      border-radius: 20px;
+      border: 1px solid themed('text-color');
+      background: themed('primary');
+    }
   }
 }
