@@ -49,5 +49,9 @@
     .is-open {
       display: block;
     }
+
+    #pattern-canvas {
+      background: themed('dark-white') !important;
+    }
   }
 }

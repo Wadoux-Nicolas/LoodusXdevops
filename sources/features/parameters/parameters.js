@@ -8,6 +8,8 @@ class Parameters extends HTMLElement {
         super();
     }
 
+    loodusDb = null;
+
     get allInputParam() {
         return this.querySelectorAll('.input-param')
     }
@@ -34,23 +36,17 @@ class Parameters extends HTMLElement {
             .then(html => this.innerHTML = html);
 
         // new instance of LoodusDb
-        const loodusDb = new LoodusDb();
+        this.loodusDb = new LoodusDb();
         // await for db to be opened
-        await loodusDb.openDb();
+        await this.loodusDb.openDb();
 
-        await this.initParameters(loodusDb, 'network-param');
+        await this.initParameters(this.loodusDb, 'network-param');
 
-        this.allInputParam.forEach(input => input.addEventListener("input", () => this.onParamChange(input, loodusDb)));
-        this.allMenuButtons.forEach(button => button.addEventListener("click", () => this.onMenuButtonClick(button, loodusDb)));
+        this.allInputParam.forEach(input => input.addEventListener("input", () => this.onParamChange(input, this.loodusDb)));
+        this.allMenuButtons.forEach(button => button.addEventListener("click", () => this.onMenuButtonClick(button, this.loodusDb)));
 
-        document.addEventListener('pattern-lock-submitted', evt => this.updateParamValue(
-            {
-                unlockMethod: 'pattern',
-                value: evt.detail.pattern
-            },
-            'lock',
-            loodusDb,
-        ));
+        this.updatePatternParamValue = this.updatePatternParamValue.bind(this)
+        document.addEventListener('pattern-lock-submitted', this.updatePatternParamValue)
 
         this.addEventListener('submit', evt => {
             evt.preventDefault();
@@ -63,10 +59,24 @@ class Parameters extends HTMLElement {
                         value: input.value
                     },
                     'lock',
-                    loodusDb,
+                    this.loodusDb,
                 )
             }
         });
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('pattern-lock-submitted', this.updatePatternParamValue)
+    }
+
+    updatePatternParamValue(event) {
+        this.updateParamValue({
+                unlockMethod: 'pattern',
+                value: event.detail.pattern
+            },
+            'lock',
+            this.loodusDb
+        );
     }
 
     onParamChange(input, loodusDb) {

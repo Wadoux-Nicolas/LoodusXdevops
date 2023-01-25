@@ -2,10 +2,17 @@ import LoodusDb from "./loodusDb";
 
 
 export async function handleThemeMode() {
-    const loodusDb = new LoodusDb();
-    await loodusDb.openDb();
 
-    const { data: { themeMode } } = await loodusDb.get('parameters', 'theme');
+    let themeMode;
+    try {
+        const loodusDb = new LoodusDb();
+        await loodusDb.openDb();
+
+        themeMode = (await loodusDb.get('parameters', 'theme')).data.themeMode;
+    } catch (e) {
+        console.error(e);
+        themeMode = 'auto';
+    }
 
     switch (themeMode) {
         case 'dark':

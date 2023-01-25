@@ -44,21 +44,29 @@ class LockScreen extends HTMLElement {
             this.querySelector(`#unlock-by-password`).classList.remove("hidden");
         }
 
-        this.addEventListener('submit', event => {
-            event.preventDefault();
-            this.submit('password', this.querySelector('#unlock-password-input').value);
-        });
+        if (unlockMethod === 'pattern') {
+            // listener to remove when successfully unlocked
+            this.submitPatternLock = this.submitPatternLock.bind(this);
+            document.addEventListener('pattern-lock-submitted', this.submitPatternLock);
+        } else if  (unlockMethod === 'free') {
+            this.querySelector('#free-unlock-button').addEventListener('click', event => {
+                this.success();
+            });
+        } else {
+            this.querySelector('#unlock-password-input').focus();
 
-        this.querySelector('#free-unlock-button').addEventListener('click', event => {
-            this.success();
-        });
-
-        document.addEventListener('pattern-lock-submitted', event => {
-            this.submit('pattern', event.detail.pattern);
-        });
+            this.addEventListener('submit', event => {
+                event.preventDefault();
+                this.submit('password', this.querySelector('#unlock-password-input').value);
+            });
+        }
 
         this.errorMessageAnimation = this.querySelector('#error-code-message').animate(errorAnimation.keyframes, errorAnimation.options);
         this.errorMessageAnimation.pause();
+    }
+
+    submitPatternLock(event) {
+        this.submit('pattern', event.detail.pattern);
     }
 
     submit(type, value) {
@@ -72,6 +80,7 @@ class LockScreen extends HTMLElement {
     }
 
     success() {
+        document.removeEventListener('pattern-lock-submitted', this.submitPatternLock);
         document.dispatchEvent(new CustomEvent('unlock-screen'));
         this.querySelector('#error-code-message').classList.add('hidden');
     }
