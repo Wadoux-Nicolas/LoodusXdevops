@@ -80,7 +80,7 @@ class Parameters extends HTMLElement {
     }
 
     onParamChange(input, loodusDb) {
-        const documentId = input.parentElement.parentElement.getAttribute('id').replace('-param', '');
+        const documentId = input.getAttribute('data-document');
         const key = camelCase(input.getAttribute('id'));
 
         switch (input.type) {
