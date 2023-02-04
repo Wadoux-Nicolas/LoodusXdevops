@@ -90,6 +90,7 @@ class LoodusDb {
 
                 const updateRequest = transaction.objectStore(document).put(newObject);
                 updateRequest.onsuccess = resolve;
+                window.document.dispatchEvent(new CustomEvent('parameters-updated'))
             };
 
             objectToUpdate.onerror = function () {
@@ -135,7 +136,7 @@ export async function initDb() {
 
                     // check if at least one value is missing
                     const hasMissingDefaultValues = Object.keys(defaultParameter.data).some((key) => {
-                        return !savedParameter.data.hasOwnProperty(key);
+                        return !savedParameter.data?.hasOwnProperty(key);
                     });
 
                     if (hasMissingDefaultValues) {
@@ -158,54 +159,44 @@ export async function initDb() {
 
 export const defaultParameterValues = [
     {
-        id: 'dateParameters',
+        id: 'date',
         data: {
-            display: true,
-            displayDay: true,
+            displayDate: true,
+            displayDay: false,
             displayMonth: true,
-            displayYear: true,
+            displayYear: false,
+            displayHours: true,
+            displayMinutes: false,
+            displaySecondes: true,
         }
     },
     {
-        id: 'hourParameters',
+        id: 'accessibility',
         data: {
-            displayHour: true,
-            displayMinute: true,
-            displaySecond: true,
+            displayVibrationState: true,
+            activeVibration: true,
+            displayBatteryState: true,
         }
     },
     {
-        id: 'vibrationParameters',
-        data: {
-            displayVibrationStatus: true,
-            enableVibration: true,
-        }
-    },
-    {
-        id: 'batteryParameters',
-        data: {
-            displayBatteryStatus: true,
-        }
-    },
-    {
-        id: 'lockParameters',
+        id: 'lock',
         data: {
             unlockMethod: 'free', // pattern or password or free (no lock)
             value: null,
         }
     },
     {
-        id: 'displayParameters',
+        id: 'theme',
         data: {
-            theme: 'light', // light or dark
+            themeMode: 'auto', // light or dark
         }
     },
     {
-        id: 'networkLatencyParameters',
+        id: 'network',
         data: {
-            displayNetworkLatency: true,
+            displayLatencyNetwork: true,
             domain: 'loodus.nicolas-wadoux.fr',
-            delay: 2000,
+            delay: 5,
         }
     },
 ];

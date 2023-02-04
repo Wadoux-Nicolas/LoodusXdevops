@@ -17,8 +17,9 @@ class Modal extends HTMLElement {
             vibrate();
             closeModal();
         });
-        // detect click outside modal
-        this.querySelector("#modal").addEventListener("click", (e) => {
+
+        // detect down click only outside modal (up click could be a fail by user)
+        this.querySelector("#modal").addEventListener("pointerdown", (e) => {
             if (e.target.id === "modal") {
                 vibrate();
                 closeModal();
