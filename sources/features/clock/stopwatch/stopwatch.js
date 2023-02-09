@@ -54,7 +54,7 @@ class Stopwatch extends HTMLElement {
         this.getButton('cancel').addEventListener("click", () => this.reset());
         this.getButton('stop-ring').addEventListener("click", () => this.stopRing());
         this.querySelectorAll('.arrow-button').forEach(button => {
-            button.addEventListener("mousedown", () => this.arrowButtonClicked(button))
+            button.addEventListener("pointerdown", () => this.arrowButtonClicked(button))
         });
         this.stopwatchAudio = new Audio(stopwatchSound);
         this.stopwatchAudio.loop = true;
@@ -87,7 +87,7 @@ class Stopwatch extends HTMLElement {
                 this.increaseInput(el, action);
             }, 100);
         }, 250);
-        button.addEventListener('mouseup', () => {
+        button.addEventListener('pointerup', () => {
             clearTimeout(timeout);
             clearInterval(interval);
         });

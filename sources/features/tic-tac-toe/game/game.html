@@ -1,9 +1,8 @@
-<section id="tic-tac-toe">
+<section id="game">
     <div id="modal-header">
         <h1 class="text2">Tic Tac Toe</h1>
     </div>
     <div id="modal-content">
-
         <div class="container">
             <div class="game">
                 <div class="player1 text5">
@@ -13,8 +12,6 @@
                     <div class="bold">Joueur 1</div>
                 </div>
 
-                <div class="text4 bold">VS</div>
-
                 <div class="player2 text5">
                     <div class="card">
                         <i class="material-icons">person</i>
@@ -22,12 +19,23 @@
                     <div class="bold">Joueur 2</div>
                 </div>
             </div>
+            <div class="board" id="board">
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+                <div class="cell square"></div>
+            </div>
             <div class="actions">
-                <button class="btn-accent large-button" id="playGame">Démarrer une partie</button>
-                <button class="btn-primary large-button" id="score">Afficher les scores</button>
+                <button class="btn-accent" id="initGame">Réinitialiser</button>
+                <button class="btn-secondary" id="score">Scores</button>
             </div>
         </div>
-
+        <div class="endGame text2" id="endGame"></div>
     </div>
 </section>
-<script src="./tic-tac-toe.js" type="module"></script>
+<script src="./game.js" type="module"></script>

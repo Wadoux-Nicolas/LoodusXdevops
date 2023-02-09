@@ -69,15 +69,18 @@ class Calculator extends HTMLElement {
             this.historyElement.innerHTML = '';
         });
 
+
         // listen for key presses and if it's a number or operator, trigger the button click
-        document.addEventListener('keydown', (event) => {
-            const key = event.key;
-            this.handleKeyBoardInputs(key);
-        });
+        this.handleKeyDownEvent = this.handleKeyDownEvent.bind(this);
+        document.addEventListener('keydown', this.handleKeyDownEvent);
 
         // init error animation
         this.errorCalculatorAnimation = this.errorCalculatorContainer.animate(errorAnimation.keyframes, errorAnimation.options);
         this.errorCalculatorAnimation.pause();
+    }
+
+    handleKeyDownEvent(event) {
+        this.handleKeyBoardInputs(event.key);
     }
 
     handleKeyBoardInputs(key) {
@@ -263,6 +266,10 @@ class Calculator extends HTMLElement {
     showComputeError() {
         this.errorCalculatorContainer.classList.remove('hidden');
         this.errorCalculatorAnimation.play();
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('keydown', this.handleKeyDownEvent);
     }
 }
 

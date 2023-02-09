@@ -2,6 +2,8 @@ import './index.scss';
 import {initDb} from "./shared/js/loodusDb";
 import * as Sentry from "@sentry/browser";
 import { BrowserTracing } from "@sentry/tracing";
+import LoodusImg from "./shared/assets/images/loodus_text.png";
+import {handleThemeMode} from "./shared/js/handleThemeMode";
 
 Sentry.init({
     dsn: "https://ff6681d393ca4380aafb28ed72ac62a2@o4504508123512832.ingest.sentry.io/4504508131901440",
@@ -36,7 +38,7 @@ const bodyHtml = `
         ${lockSectionHtml}            
     </main>
     <footer>
-        <img src="./shared/assets/images/loodus_text.png" alt="Loodus" class="loodus-icon">
+        <img src="${LoodusImg}" alt="Loodus" class="loodus-icon">
         <div class="footer-actions hidden-when-locked">
             <button id="home-lock-screen-button" class="btn-icon lock-screen-button">
                 <span class="material-icons">lock</span>
@@ -50,13 +52,6 @@ const bodyHtml = `
 `;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const preferenceQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    // ------ Theme mode handle ------
-
-    preferenceQuery.addEventListener("change", checkPreference);
-    checkPreference(preferenceQuery);
-
     // ------ Database handle ------
 
     try {
@@ -66,6 +61,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.body.innerHTML = osErrorHtml;
         return;
     }
+
+    await handleThemeMode();
 
     // now that everything is setted up, remove loader component and show the app
     // it will trigger connectedCallbacks methods only at this moment
@@ -97,18 +94,4 @@ function lockScreen() {
 function unlockScreen() {
     document.body.classList.remove('is-locked');
     document.querySelector('main').innerHTML = unlockedSectionHtml;
-}
-
-function addDarkMode() {
-    document.body.classList.remove("theme--light");
-    document.body.classList.add("theme--dark");
-}
-
-function addLightMode() {
-    document.body.classList.remove("theme--dark");
-    document.body.classList.add("theme--light");
-}
-
-function checkPreference(preferenceQuery) {
-    preferenceQuery.matches ? addDarkMode() : addLightMode();
 }

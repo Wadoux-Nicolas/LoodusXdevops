@@ -45,8 +45,6 @@ class Home extends HTMLElement {
             }
         });
 
-        document.addEventListener('unlock-screen', () => this.displayClock());
-
         this.displayClock();
         this.displayDay();
         setInterval(() => {

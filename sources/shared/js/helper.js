@@ -4,7 +4,7 @@ import bobAvatar from "../assets/images/bob.png";
 export function _(tag, content, parent, id = null, customClass = null) {
     let element = document.createElement(tag);
 
-    if (content) {
+    if (content != null) {
         element.appendChild(document.createTextNode(content));
     }
     if (id) {
@@ -54,4 +54,13 @@ export function updateAvatar() {
     document.querySelectorAll(".avatar").forEach(img => {
         img.src = bobAvatar;
     });
+}
+
+export function camelCase(str) {
+    const regex = /[-_|\s]+(.)/g;
+    const lowerStr = str.toLowerCase();
+
+    return lowerStr.replaceAll(regex, (match, chr) => {
+        return chr.toUpperCase();
+    })
 }
