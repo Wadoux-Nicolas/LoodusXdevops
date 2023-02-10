@@ -95,9 +95,11 @@ class Parameters extends HTMLElement {
                 }, documentId, loodusDb);
                 break;
             case 'number':
-                this.updateParamValue({
-                    [key]: input.value
-                }, documentId, loodusDb);
+                if (input.value !== '') {
+                    this.updateParamValue({
+                       [key]: input.value
+                   }, documentId, loodusDb);
+                }
                 break;
             case 'select-one':
                 if (documentId === 'lock') {
@@ -195,4 +197,3 @@ class Parameters extends HTMLElement {
 }
 
 customElements.define(parametersTagName, Parameters);
-

@@ -8,16 +8,19 @@ import LoodusDb from "../../js/loodusDb";
 class Navbar extends HTMLElement {
 
     loodusDb = new LoodusDb();
+    optionsDateTime = {};
+    optionsNetwork = {};
+    networkLatency;
 
     constructor() {
         super();
     }
 
-    get date() {
+    get getDate() {
         return this.querySelector("#date");
     }
 
-    get time() {
+    get getTime() {
         return this.querySelector("#time");
     }
 
@@ -45,6 +48,10 @@ class Navbar extends HTMLElement {
         return this.querySelector("#crossword");
     }
 
+    get networkIndicator() {
+        return this.querySelector('#network-indicator')
+    }
+
     async connectedCallback() {
         await fetch(getUrl("shared/components/navbar/navbar.html"))
             .then(response => response.text())
@@ -53,47 +60,14 @@ class Navbar extends HTMLElement {
         await this.loodusDb.openDb()
             .catch(error => console.error(error ?? "Erreur lors de la connexion à la base de données"));
 
-        this.loodusDb.get('parameters', 'dateParameters')
-            .then(result => {
-                const dateParameters = result?.data ?? [];
-                this.setDate(dateParameters);
-                setInterval(() => {
-                    this.setDate(dateParameters);
-                }, 3600000);
-                this.updateElements(dateParameters, this.setDate);
-            })
-            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
+        await this.initialize();
 
-        this.loodusDb.get('parameters', 'hourParameters')
-            .then(result => {
-                const timeParameters = result?.data ?? [];
-                this.setTime(timeParameters);
-                setInterval(() => {
-                    this.setTime(timeParameters);
-                }, 1000);
-                this.updateElements(timeParameters, this.setTime);
-            })
-            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
+        this.updateTrigger();
 
-
-        this.loodusDb.get('parameters', 'vibrationParameters')
-            .then(result => {
-                const vibrationParameters = result?.data ?? [];
-                this.updateVibrateIcon(vibrationParameters);
-                this.updateElements(vibrationParameters, this.updateVibrateIcon);
-            })
-            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
-
-        this.loodusDb.get('parameters', 'networkLatencyParameters')
-            .then(result => {
-                const networkLatencyParameters = result?.data ?? [];
-                this.setNetworkStatus(networkLatencyParameters);
-                setInterval(() => {
-                    this.setNetworkStatus(networkLatencyParameters);
-                }, 1000);
-                this.updateElements(networkLatencyParameters, this.setNetworkStatus);
-            })
-            .catch(error => console.error(error ?? "Erreur lors de la récupération des paramètres, ou ils sont vides"));
+        setInterval(() => {
+            this.setTime();
+            this.setDate();
+        }, 1000);
 
         this.querySelector("#parameters").addEventListener("click", () => {
             openModal(parametersTagName);
@@ -102,41 +76,32 @@ class Navbar extends HTMLElement {
         this.initBatteryListeners();
     }
 
-    updateElements(parameters, callback) {
-        if (parameters) {
-            document.addEventListener("parameters-updated", () => {
-                callback(parameters);
-            });
-        }
-    }
+    setTime() {
+        const { hour, minute, second } = this.optionsDateTime;
 
-    setTime(timeParameters) {
-        const hour = timeParameters.displayHour;
-        const minute = timeParameters.displayMinute;
-        const second = timeParameters.displaySecond;
+        if( hour || minute || second ) {
 
-        if(hour !== undefined && minute !== undefined && second !== undefined) {
             const options = {
                 hour: hour ? 'numeric' : undefined,
                 minute: minute ? 'numeric' : undefined,
                 second: second ? 'numeric' : undefined,
             }
-            this.time.textContent = new Date().toLocaleString('fr-FR', options);
+
+            this.getTime.innerHTML = new Date().toLocaleString('fr-FR', options);
+            this.getTime.classList.remove('hidden');
         }
         else {
-            this.time.classList.add('hidden');
+            this.getTime.classList.add('hidden');
         }
-
     }
 
-    setDate(dateParameters) {
-        if(dateParameters.display) {
-            const weekday = dateParameters.displayDay;
-            const day = dateParameters.displayDay;
-            const month = dateParameters.displayMonth;
-            const year = dateParameters.displayYear;
+    setDate() {
+        const { displayDate, day, weekday, month, year} = this.optionsDateTime;
 
-            if(weekday !== undefined && day !== undefined && month !== undefined && year !== undefined) {
+        if(displayDate) {
+            this.getDate.classList.remove('hidden');
+
+            if( weekday || day || month || year ) {
                 const options = {
                     weekday: weekday ? 'long' : undefined,
                     day: day ? 'numeric' : undefined,
@@ -145,14 +110,19 @@ class Navbar extends HTMLElement {
                 }
 
                 let date = new Date().toLocaleString('fr-FR', options);
+
                 if(weekday) {
                     date = date.charAt(0).toUpperCase() + date.slice(1);
                 }
-                this.date.textContent = date;
+
+                this.getDate.innerHTML = date;
             }
             else {
-                this.date.classList.add('hidden');
+                this.getDate.classList.add('hidden');
             }
+        }
+        else {
+            this.getDate.classList.add('hidden');
         }
     }
 
@@ -188,34 +158,126 @@ class Navbar extends HTMLElement {
         }
     }
 
-    setNetworkStatus(networkLatencyParameters) {
-        if(networkLatencyParameters.displayNetworkLatency) {
-            let url = networkLatencyParameters.url
-            url = "https://" + url;
-            const startTime = Date.now();
-            fetch(url)
-                .then(response => {
-                    const latency = Date.now() - startTime;
-                    this.latenceLevel.textContent = latency + "ms";
-                    if (latency <= 100) {
-                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
-                    } else if (latency <= 200) {
-                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
-                    } else {
-                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
-                    }
-                })
-                .catch(error => console.log(error));
+    setNetworkStatus() {
+        const { displayLatencyNetwork, domain, delay } = this.optionsNetwork;
+        clearInterval(this.networkLatency);
+
+        if(displayLatencyNetwork) {
+            this.networkIndicator.classList.remove('hidden');
+
+            this.networkLatency = this.noDelayFirstSetInterval(() => {
+                const url = "https://" +  domain;
+                const startTime = Date.now();
+
+                fetch(url)
+                    .then(response => {
+                        const latency = Date.now() - startTime;
+                        this.latenceLevel.innerHTML = latency + "ms";
+                        if (latency <= 100) {
+                            this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt</i>`;
+                        } else if (latency <= 200) {
+                            this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_2_bar</i>`;
+                        } else {
+                            this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
+                        }
+                    })
+                    .catch(error => console.log(error));
+            }, delay * 1000);
+        }
+        else {
+            this.networkIndicator.classList.add('hidden');
         }
     }
 
-    updateVibrateIcon(vibrationParameters) {
-        if (vibrationParameters.displayVibrationStatus === true){
+    noDelayFirstSetInterval(func, interval) {
+        func();
+        return setInterval(func, interval);
+    }
+
+    setAccessibility(vibrationParameters) {
+        if (vibrationParameters.displayVibrationState === true){
             this.vibrateIcon.classList.remove('hidden');
         }
-        if(vibrationParameters.enableVibration === false){
+        else {
+            this.vibrateIcon.classList.add('hidden');
+        }
+        if(vibrationParameters.activeVibration === false){
             this.crosswordIcon.classList.remove('hidden');
         }
+        else {
+            this.crosswordIcon.classList.add('hidden');
+        }
+        // À voir pcq pas bien compris le point sur la batterie
+        /*if(accessibilityParams.displayBatteryState === true){
+            this.crosswordIcon.classList.remove('hidden');
+        }*/
+    }
+
+    async initialize() {
+        const dbParams = await this.loodusDb.getAll('parameters');
+
+        for (const param of dbParams) {
+            this.updateElements(param.id, param.data);
+        }
+
+    }
+
+    updateTrigger() {
+        document.addEventListener("parameters-updated", async (e) => {
+            const documentId = e.detail.documentId;
+
+            const params = await this.loodusDb.get('parameters', documentId);
+
+            this.updateElements(documentId, params.data);
+
+        });
+    }
+
+    updateElements(documentId, params) {
+
+        switch (documentId) {
+            case 'network':
+                this.setOptionsNetwork(params);
+                this.setNetworkStatus();
+
+                break;
+
+            case 'date':
+                this.setOptionsDateTime(params);
+                this.setDate();
+                this.setTime();
+                break;
+
+            case 'accessibility':
+                this.setAccessibility(params);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    setOptionsDateTime(dateParams) {
+        this.optionsDateTime = {
+            weekday: dateParams.displayDay,
+            day: dateParams.displayDay,
+            month: dateParams.displayMonth,
+            year: dateParams.displayYear,
+            displayDate: dateParams.displayDate,
+            hour: dateParams.displayHours,
+            minute: dateParams.displayMinutes,
+            second: dateParams.displaySecondes,
+        };
+    }
+
+    setOptionsNetwork(networkParams) {
+        const { displayLatencyNetwork, domain, delay } = networkParams;
+
+        this.optionsNetwork = {
+            displayLatencyNetwork,
+            domain,
+            delay,
+        };
     }
 }
 

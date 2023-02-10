@@ -90,7 +90,11 @@ class LoodusDb {
 
                 const updateRequest = transaction.objectStore(document).put(newObject);
                 updateRequest.onsuccess = resolve;
-                window.document.dispatchEvent(new CustomEvent('parameters-updated'))
+                window.document.dispatchEvent(new CustomEvent('parameters-updated', {
+                    detail: {
+                        documentId,
+                    }
+                }))
             };
 
             objectToUpdate.onerror = function () {
