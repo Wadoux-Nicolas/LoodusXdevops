@@ -177,7 +177,14 @@ class Parameters extends HTMLElement {
             'parameters',
             documentId,
             value
-        );
+        ).then(() =>
+            window.document.dispatchEvent(new CustomEvent('parameters-updated', {
+                detail: {
+                    documentId,
+                }
+            }))
+            // TODO add success message or icon ?
+        ).catch(err => console.error(err));
     }
 
     handleDisplayLockInputs(input) {

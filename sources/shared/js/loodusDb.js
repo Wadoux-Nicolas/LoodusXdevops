@@ -90,11 +90,6 @@ class LoodusDb {
 
                 const updateRequest = transaction.objectStore(document).put(newObject);
                 updateRequest.onsuccess = resolve;
-                window.document.dispatchEvent(new CustomEvent('parameters-updated', {
-                    detail: {
-                        documentId,
-                    }
-                }))
             };
 
             objectToUpdate.onerror = function () {
@@ -166,12 +161,13 @@ export const defaultParameterValues = [
         id: 'date',
         data: {
             displayDate: true,
-            displayDay: false,
+            displayDay: true,
             displayMonth: true,
             displayYear: false,
+            displayTime: true,
             displayHours: true,
-            displayMinutes: false,
-            displaySecondes: true,
+            displayMinutes: true,
+            displaySecondes: false,
         }
     },
     {

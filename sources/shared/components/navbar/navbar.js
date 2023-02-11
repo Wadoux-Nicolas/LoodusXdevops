@@ -11,6 +11,7 @@ class Navbar extends HTMLElement {
     optionsDateTime = {};
     optionsNetwork = {};
     networkLatency;
+    static MAXIMUM_TRIES = 3
 
     constructor() {
         super();
@@ -64,7 +65,7 @@ class Navbar extends HTMLElement {
 
         this.updateTrigger();
 
-        setInterval(() => {
+        this.setIntervalWithoutDelay(() => {
             this.setTime();
             this.setDate();
         }, 1000);
@@ -77,9 +78,9 @@ class Navbar extends HTMLElement {
     }
 
     setTime() {
-        const { hour, minute, second } = this.optionsDateTime;
+        const {displayTime, hour, minute, second} = this.optionsDateTime;
 
-        if( hour || minute || second ) {
+        if (displayTime && (hour || minute || second)) {
 
             const options = {
                 hour: hour ? 'numeric' : undefined,
@@ -89,19 +90,18 @@ class Navbar extends HTMLElement {
 
             this.getTime.innerHTML = new Date().toLocaleString('fr-FR', options);
             this.getTime.classList.remove('hidden');
-        }
-        else {
+        } else {
             this.getTime.classList.add('hidden');
         }
     }
 
     setDate() {
-        const { displayDate, day, weekday, month, year} = this.optionsDateTime;
+        const {displayDate, day, weekday, month, year} = this.optionsDateTime;
 
-        if(displayDate) {
+        if (displayDate) {
             this.getDate.classList.remove('hidden');
 
-            if( weekday || day || month || year ) {
+            if (weekday || day || month || year) {
                 const options = {
                     weekday: weekday ? 'long' : undefined,
                     day: day ? 'numeric' : undefined,
@@ -111,17 +111,15 @@ class Navbar extends HTMLElement {
 
                 let date = new Date().toLocaleString('fr-FR', options);
 
-                if(weekday) {
+                if (weekday) {
                     date = date.charAt(0).toUpperCase() + date.slice(1);
                 }
 
                 this.getDate.innerHTML = date;
-            }
-            else {
+            } else {
                 this.getDate.classList.add('hidden');
             }
-        }
-        else {
+        } else {
             this.getDate.classList.add('hidden');
         }
     }
@@ -159,18 +157,23 @@ class Navbar extends HTMLElement {
     }
 
     setNetworkStatus() {
-        const { displayLatencyNetwork, domain, delay } = this.optionsNetwork;
+        const {displayLatencyNetwork, domain, delay} = this.optionsNetwork;
         clearInterval(this.networkLatency);
 
-        if(displayLatencyNetwork) {
+        if (displayLatencyNetwork) {
             this.networkIndicator.classList.remove('hidden');
 
-            this.networkLatency = this.noDelayFirstSetInterval(() => {
-                const url = "https://" +  domain;
+            let errors = 0;
+            this.networkLatency = this.setIntervalWithoutDelay(() => {
+                let url = domain;
+                if (!url.startsWith("http")) {
+                    url = "https://" + url;
+                }
                 const startTime = Date.now();
 
                 fetch(url)
-                    .then(response => {
+                    .then(() => {
+                        errors = 0;
                         const latency = Date.now() - startTime;
                         this.latenceLevel.innerHTML = latency + "ms";
                         if (latency <= 100) {
@@ -181,30 +184,38 @@ class Navbar extends HTMLElement {
                             this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_alt_1_bar</i>`;
                         }
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        console.warn(error)
+                        errors++;
+                        this.networkIcon.innerHTML = `<i class="material-icons">signal_cellular_off</i>`;
+                        this.latenceLevel.innerHTML = "";
+
+                        // if we have too many errors, we stop the interval
+                        if (errors >= Navbar.MAXIMUM_TRIES) {
+                            console.error("Too many errors : Le domaine " + domain + " n'est pas joignable")
+                            clearInterval(this.networkLatency);
+                        }
+                    });
             }, delay * 1000);
-        }
-        else {
+        } else {
             this.networkIndicator.classList.add('hidden');
         }
     }
 
-    noDelayFirstSetInterval(func, interval) {
+    setIntervalWithoutDelay(func, interval) {
         func();
         return setInterval(func, interval);
     }
 
     setAccessibility(vibrationParameters) {
-        if (vibrationParameters.displayVibrationState === true){
+        if (vibrationParameters.displayVibrationState === true) {
             this.vibrateIcon.classList.remove('hidden');
-        }
-        else {
+        } else {
             this.vibrateIcon.classList.add('hidden');
         }
-        if(vibrationParameters.activeVibration === false){
+        if (vibrationParameters.activeVibration === false) {
             this.crosswordIcon.classList.remove('hidden');
-        }
-        else {
+        } else {
             this.crosswordIcon.classList.add('hidden');
         }
         // À voir pcq pas bien compris le point sur la batterie
@@ -229,23 +240,18 @@ class Navbar extends HTMLElement {
             const params = await this.loodusDb.get('parameters', documentId);
 
             this.updateElements(documentId, params.data);
-
         });
     }
 
     updateElements(documentId, params) {
-
         switch (documentId) {
             case 'network':
                 this.setOptionsNetwork(params);
                 this.setNetworkStatus();
-
                 break;
 
             case 'date':
                 this.setOptionsDateTime(params);
-                this.setDate();
-                this.setTime();
                 break;
 
             case 'accessibility':
@@ -264,6 +270,7 @@ class Navbar extends HTMLElement {
             month: dateParams.displayMonth,
             year: dateParams.displayYear,
             displayDate: dateParams.displayDate,
+            displayTime: dateParams.displayTime,
             hour: dateParams.displayHours,
             minute: dateParams.displayMinutes,
             second: dateParams.displaySecondes,
@@ -271,7 +278,7 @@ class Navbar extends HTMLElement {
     }
 
     setOptionsNetwork(networkParams) {
-        const { displayLatencyNetwork, domain, delay } = networkParams;
+        const {displayLatencyNetwork, domain, delay} = networkParams;
 
         this.optionsNetwork = {
             displayLatencyNetwork,
