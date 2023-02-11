@@ -87,5 +87,11 @@
       border: 1px solid themed('text-color');
       background: themed('primary');
     }
+
+    #security-changed {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
   }
 }

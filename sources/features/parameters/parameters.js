@@ -11,7 +11,11 @@ class Parameters extends HTMLElement {
     loodusDb = null;
 
     get allInputParam() {
-        return this.querySelectorAll('.input-param')
+        return this.querySelectorAll('.input-param');
+    }
+
+    get securityChanged() {
+        return this.querySelector('#security-changed');
     }
 
     get allMenuButtons() {
@@ -23,7 +27,7 @@ class Parameters extends HTMLElement {
     }
 
     get menuButtonIsActive() {
-        return this.querySelector('.active')
+        return this.querySelector('.active');
     }
 
     get lockInputs() {
@@ -48,20 +52,21 @@ class Parameters extends HTMLElement {
         this.updatePatternParamValue = this.updatePatternParamValue.bind(this)
         document.addEventListener('pattern-lock-submitted', this.updatePatternParamValue)
 
-        this.addEventListener('submit', evt => {
+        this.querySelector('#lock-by-password').addEventListener('submit', evt => {
             evt.preventDefault();
             const input = this.querySelector('#lock-password-input');
 
-            if (evt.target.id === 'lock-by-password') {
-                this.updateParamValue(
-                    {
-                        unlockMethod: input.type,
-                        value: input.value
-                    },
-                    'lock',
-                    this.loodusDb,
-                )
-            }
+            this.updateParamValue(
+                {
+                    unlockMethod: input.type,
+                    value: input.value
+                },
+                'lock',
+                this.loodusDb,
+            ).then(() => {
+                input.value = '';
+                this.securityChanged.classList.remove('hidden');
+            })
         });
     }
 
@@ -76,10 +81,13 @@ class Parameters extends HTMLElement {
             },
             'lock',
             this.loodusDb
-        );
+        ).then(() => {
+            this.securityChanged.classList.remove('hidden');
+        })
     }
 
     onParamChange(input, loodusDb) {
+        this.securityChanged.classList.add('hidden');
         const documentId = input.getAttribute('data-document');
         const key = camelCase(input.getAttribute('id'));
 
@@ -97,8 +105,8 @@ class Parameters extends HTMLElement {
             case 'number':
                 if (input.value !== '') {
                     this.updateParamValue({
-                       [key]: input.value
-                   }, documentId, loodusDb);
+                        [key]: input.value
+                    }, documentId, loodusDb);
                 }
                 break;
             case 'select-one':
@@ -120,6 +128,8 @@ class Parameters extends HTMLElement {
     }
 
     async onMenuButtonClick(button, loodusDb) {
+        this.securityChanged.classList.add('hidden');
+
         const buttonId = button.id;
         const section = this.getSectionByButton(buttonId);
         const openedSection = this.paramSectionIsOpen;
@@ -173,7 +183,7 @@ class Parameters extends HTMLElement {
     }
 
     updateParamValue(value, documentId, loodusDb) {
-        loodusDb.set(
+        return loodusDb.set(
             'parameters',
             documentId,
             value
@@ -183,7 +193,6 @@ class Parameters extends HTMLElement {
                     documentId,
                 }
             }))
-            // TODO add success message or icon ?
         ).catch(err => console.error(err));
     }
 
