@@ -10,7 +10,9 @@ class Navbar extends HTMLElement {
     loodusDb = new LoodusDb();
     optionsDateTime = {};
     optionsNetwork = {};
+    accessibilityParams = {};
     networkLatency;
+    battery = null;
     static MAXIMUM_TRIES = 3
 
     constructor() {
@@ -23,6 +25,10 @@ class Navbar extends HTMLElement {
 
     get getTime() {
         return this.querySelector("#time");
+    }
+
+    get batteryInformation() {
+        return this.querySelector("#batteryInformation");
     }
 
     get batteryLevel() {
@@ -74,7 +80,7 @@ class Navbar extends HTMLElement {
             openModal(parametersTagName);
         });
 
-        this.initBatteryListeners();
+        await this.initBatteryListeners();
     }
 
     setTime() {
@@ -127,20 +133,36 @@ class Navbar extends HTMLElement {
     initBatteryListeners() {
         if (!navigator.getBattery) {
             console.error('Battery API is not handled by this browser');
-            this.querySelectorAll('.batteryInformations').forEach(info => info.classList.add('hidden'));
+            this.batteryInformation.classList.add('hidden');
             return;
         }
 
-        navigator.getBattery()
-            .then(battery => {
-                this.updateBatteryCharging(battery.charging);
-                this.updateBatteryLevel(battery.level);
-                battery.addEventListener('chargingchange', () => this.updateBatteryCharging(battery.charging));
-                battery.addEventListener('levelchange', () => this.updateBatteryLevel(battery.level));
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+        if (!this.battery) {
+            try {
+                this.battery = navigator.getBattery().then(battery => {
+                    this.battery = battery;
+                    this.setBatteryStatus();
+                })
+            } catch (e) {
+                console.error(e);
+            }
+        } else {
+            this.setBatteryStatus();
+        }
+    }
+
+    setBatteryStatus() {
+        if (this.accessibilityParams.displayBatteryState) {
+            this.batteryInformation.classList.remove('hidden');
+            this.updateBatteryCharging(this.battery.charging);
+            this.battery.onchargingchange = () => this.updateBatteryCharging(this.battery.charging);
+            this.updateBatteryLevel(this.battery.level);
+            this.battery.onlevelchange = () => this.updateBatteryLevel(this.battery.level);
+        } else {
+            this.batteryInformation.classList.add('hidden');
+            this.battery.onchargingchange = null;
+            this.battery.onlevelchange = null;
+        }
     }
 
     updateBatteryLevel(level) {
@@ -150,9 +172,9 @@ class Navbar extends HTMLElement {
 
     updateBatteryCharging(isCharging) {
         if (isCharging) {
-            this.batteryLevel.classList.add("charging");
+            this.batteryInformation.classList.add("charging");
         } else {
-            this.batteryLevel.classList.remove("charging");
+            this.batteryInformation.classList.remove("charging");
         }
     }
 
@@ -207,21 +229,19 @@ class Navbar extends HTMLElement {
         return setInterval(func, interval);
     }
 
-    setAccessibility(vibrationParameters) {
-        if (vibrationParameters.displayVibrationState === true) {
+    setAccessibility(accessibilityParams) {
+        this.accessibilityParams = accessibilityParams;
+        if (accessibilityParams.displayVibrationState === true) {
             this.vibrateIcon.classList.remove('hidden');
         } else {
             this.vibrateIcon.classList.add('hidden');
         }
-        if (vibrationParameters.activeVibration === false) {
+        if (accessibilityParams.activeVibration === false) {
             this.crosswordIcon.classList.remove('hidden');
         } else {
             this.crosswordIcon.classList.add('hidden');
         }
-        // À voir pcq pas bien compris le point sur la batterie
-        /*if(accessibilityParams.displayBatteryState === true){
-            this.crosswordIcon.classList.remove('hidden');
-        }*/
+        this.initBatteryListeners();
     }
 
     async initialize() {
