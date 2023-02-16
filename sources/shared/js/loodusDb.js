@@ -61,7 +61,7 @@ class LoodusDb {
     }
 
     set(document, documentId, object, hardMode = false) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const transaction = this.db.transaction(document, 'readwrite');
             const objectToUpdate = transaction.objectStore(document).get(documentId);
 
