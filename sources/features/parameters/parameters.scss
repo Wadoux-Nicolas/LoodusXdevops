@@ -10,6 +10,15 @@
     .menu {
       width: 30%;
     }
+
+    .title-menu {
+      display: block;
+    }
+
+    .icon-menu {
+      display: none;
+    }
+
     .menu-button {
       border: none;
       background: themed('dark-white');
@@ -17,6 +26,7 @@
       width: 100%;
       height: 32px;
       margin-bottom: 10px;
+      text-align: center;
     }
 
     .menu-button:last-child {
@@ -87,5 +97,44 @@
       border: 1px solid themed('text-color');
       background: themed('primary');
     }
+
+    #security-changed {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .save-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .modal-content {
+        flex-direction: column;
+      }
+      .menu {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
+
+      .title-menu {
+        display: none;
+      }
+
+      .icon-menu {
+        color: black;
+        display: block;
+      }
+
+      .content {
+        width: 100%;
+        padding: 0;
+      }
+    }
+
   }
 }

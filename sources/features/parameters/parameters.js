@@ -10,8 +10,16 @@ class Parameters extends HTMLElement {
 
     loodusDb = null;
 
+    // same format that indexedDb.
+    // ex: params = { network: { domain: '...', delay: 5, ... } }
+    parameters = {};
+
     get allInputParam() {
-        return this.querySelectorAll('.input-param')
+        return this.querySelectorAll('.input-param');
+    }
+
+    get securityChanged() {
+        return this.querySelector('#security-changed');
     }
 
     get allMenuButtons() {
@@ -23,11 +31,15 @@ class Parameters extends HTMLElement {
     }
 
     get menuButtonIsActive() {
-        return this.querySelector('.active')
+        return this.querySelector('.active');
     }
 
     get lockInputs() {
         return this.querySelectorAll('.lock-method');
+    }
+
+    get saveButton() {
+        return this.querySelector('#save-parameters');
     }
 
     async connectedCallback() {
@@ -44,29 +56,50 @@ class Parameters extends HTMLElement {
 
         this.allInputParam.forEach(input => input.addEventListener("input", () => this.onParamChange(input, this.loodusDb)));
         this.allMenuButtons.forEach(button => button.addEventListener("click", () => this.onMenuButtonClick(button, this.loodusDb)));
+        this.saveButton.addEventListener('click', () => this.onSaveButtonClick(this.loodusDb));
 
         this.updatePatternParamValue = this.updatePatternParamValue.bind(this)
         document.addEventListener('pattern-lock-submitted', this.updatePatternParamValue)
 
-        this.addEventListener('submit', evt => {
+        this.querySelector('#lock-by-password').addEventListener('submit', evt => {
             evt.preventDefault();
             const input = this.querySelector('#lock-password-input');
 
-            if (evt.target.id === 'lock-by-password') {
-                this.updateParamValue(
-                    {
-                        unlockMethod: input.type,
-                        value: input.value
-                    },
-                    'lock',
-                    this.loodusDb,
-                )
-            }
+            this.updateParamValue(
+                {
+                    unlockMethod: input.type,
+                    value: input.value
+                },
+                'lock',
+                this.loodusDb,
+            ).then(() => {
+                input.value = '';
+                this.securityChanged.classList.remove('hidden');
+            })
         });
     }
 
     disconnectedCallback() {
-        document.removeEventListener('pattern-lock-submitted', this.updatePatternParamValue)
+        document.removeEventListener('pattern-lock-submitted', this.updatePatternParamValue);
+    }
+
+    async onSaveButtonClick(loodusDb) {
+        const parametersIsEmpty = Object.keys(this.parameters).length === 0;
+        if (parametersIsEmpty){
+            console.log('No parameters to save');
+            return;
+        }
+
+        this.saveButton.setAttribute('disabled', 'true');
+        for (const parameter in this.parameters) {
+            await this.updateParamValue(
+                this.parameters[parameter],
+                parameter,
+                loodusDb
+            );
+        }
+        this.saveButton.removeAttribute('disabled');
+        this.parameters = {};
     }
 
     updatePatternParamValue(event) {
@@ -76,48 +109,58 @@ class Parameters extends HTMLElement {
             },
             'lock',
             this.loodusDb
-        );
+        ).then(() => {
+            this.securityChanged.classList.remove('hidden');
+        })
     }
 
     onParamChange(input, loodusDb) {
+        this.securityChanged.classList.add('hidden');
         const documentId = input.getAttribute('data-document');
         const key = camelCase(input.getAttribute('id'));
 
         switch (input.type) {
             case 'checkbox':
-                this.updateParamValue({
+                this.setParameters(documentId, {
                     [key]: input.checked
-                }, documentId, loodusDb);
+                })
                 break;
             case 'text':
-                this.updateParamValue({
+                this.setParameters(documentId, {
                     [key]: input.value
-                }, documentId, loodusDb);
+                })
                 break;
             case 'number':
-                this.updateParamValue({
-                    [key]: input.value
-                }, documentId, loodusDb);
+                if (input.value !== '') {
+                    this.setParameters(documentId, {
+                        [key]: input.value
+                    })
+                }
                 break;
             case 'select-one':
                 if (documentId === 'lock') {
-                    this.updateParamValue({
-                        unlockMethod: 'free',
-                        value: undefined,
-                    }, documentId, loodusDb);
+                    if (input.value === 'free') {
+                        this.setParameters(documentId, {
+                            unlockMethod: 'free',
+                            value: undefined,
+                        })
+                    }
                     this.handleDisplayLockInputs(input);
                     break;
                 }
 
-                this.updateParamValue({
+                this.setParameters(documentId, {
                     [key]: input.value
-                }, documentId, loodusDb);
+                })
+
                 break;
         }
 
     }
 
     async onMenuButtonClick(button, loodusDb) {
+        this.securityChanged.classList.add('hidden');
+
         const buttonId = button.id;
         const section = this.getSectionByButton(buttonId);
         const openedSection = this.paramSectionIsOpen;
@@ -171,11 +214,33 @@ class Parameters extends HTMLElement {
     }
 
     updateParamValue(value, documentId, loodusDb) {
-        loodusDb.set(
+        return loodusDb.set(
             'parameters',
             documentId,
             value
-        );
+        ).then(() =>
+            window.document.dispatchEvent(new CustomEvent('parameters-updated', {
+                detail: {
+                    documentId,
+                }
+            }))
+        ).catch(err => console.error(err));
+    }
+
+    /**
+     *
+     * @param documentId is a string
+     * @param value is an object
+     * ex: value: { domain: '...', delay: 5 }
+     */
+    setParameters(documentId, value) {
+        this.parameters = {
+            ...this.parameters,
+            [documentId]: {
+                ...(this.parameters[documentId] && this.parameters[documentId]),
+                ...value,
+            }
+        }
     }
 
     handleDisplayLockInputs(input) {
@@ -195,4 +260,3 @@ class Parameters extends HTMLElement {
 }
 
 customElements.define(parametersTagName, Parameters);
-
