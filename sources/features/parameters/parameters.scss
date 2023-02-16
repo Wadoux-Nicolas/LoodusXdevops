@@ -21,7 +21,7 @@
 
     .menu-button {
       border: none;
-      background: themed('dark-white');
+      background: themed('light-white');
       color: black;
       width: 100%;
       height: 32px;
@@ -40,7 +40,7 @@
 
     .menu-button.active {
       background: themed('primary');
-      color: permanent('bg-color');
+      color: themed('light-white');
     }
 
     .content {
@@ -128,6 +128,10 @@
       .icon-menu {
         color: black;
         display: block;
+
+      }
+      .menu-button.active .icon-menu{
+        color: themed('light-white');
       }
 
       .content {
