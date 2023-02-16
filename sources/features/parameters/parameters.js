@@ -22,6 +22,10 @@ class Parameters extends HTMLElement {
         return this.querySelector('#security-changed');
     }
 
+    get noEmptyPassword() {
+        return this.querySelector('#no-empty-password');
+    }
+
     get allMenuButtons() {
         return this.querySelectorAll(".menu-button");
     }
@@ -54,7 +58,7 @@ class Parameters extends HTMLElement {
 
         await this.initParameters(this.loodusDb, 'network-param');
 
-        this.allInputParam.forEach(input => input.addEventListener("input", () => this.onParamChange(input, this.loodusDb)));
+        this.allInputParam.forEach(input => input.addEventListener("input", () => this.onParamChange(input)));
         this.allMenuButtons.forEach(button => button.addEventListener("click", () => this.onMenuButtonClick(button, this.loodusDb)));
         this.saveButton.addEventListener('click', () => this.onSaveButtonClick(this.loodusDb));
 
@@ -64,6 +68,11 @@ class Parameters extends HTMLElement {
         this.querySelector('#lock-by-password').addEventListener('submit', evt => {
             evt.preventDefault();
             const input = this.querySelector('#lock-password-input');
+
+            if (!input.value) {
+                this.noEmptyPassword.classList.remove('hidden');
+                return;
+            }
 
             this.updateParamValue(
                 {
@@ -75,6 +84,7 @@ class Parameters extends HTMLElement {
             ).then(() => {
                 input.value = '';
                 this.securityChanged.classList.remove('hidden');
+                this.noEmptyPassword.classList.add('hidden');
             })
         });
     }
@@ -114,8 +124,9 @@ class Parameters extends HTMLElement {
         })
     }
 
-    onParamChange(input, loodusDb) {
+    onParamChange(input) {
         this.securityChanged.classList.add('hidden');
+        this.noEmptyPassword.classList.add('hidden');
         const documentId = input.getAttribute('data-document');
         const key = camelCase(input.getAttribute('id'));
 
@@ -160,6 +171,7 @@ class Parameters extends HTMLElement {
 
     async onMenuButtonClick(button, loodusDb) {
         this.securityChanged.classList.add('hidden');
+        this.noEmptyPassword.classList.add('hidden');
 
         const buttonId = button.id;
         const section = this.getSectionByButton(buttonId);
