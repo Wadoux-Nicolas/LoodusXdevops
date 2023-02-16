@@ -2,8 +2,132 @@
     <div id="modal-header">
         <h1 class="text2">Parameters</h1>
     </div>
-    <div id="modal-content">
-        <p>Parameters is working</p>
+    <div id="modal-content" class="modal-content">
+        <div id="parameters-menu" class="menu">
+            <button id="network" class="menu-button active">
+                <span class="title-menu">Réseau</span>
+                <span class="material-icons icon-menu">network_cell</span>
+            </button>
+            <button id="date" class="menu-button">
+                <span class="title-menu">Date</span>
+                <span class="material-icons icon-menu">calendar_today</span>
+            </button>
+            <button id="accessibility" class="menu-button">
+                <span class="title-menu">Accessibilité</span>
+                <span class="material-icons icon-menu">accessibility</span>
+            </button>
+            <button id="lock" class="menu-button">
+                <span class="title-menu">Verrouillage</span>
+                <span class="material-icons icon-menu">lock</span>
+            </button>
+            <button id="theme" class="menu-button">
+                <span class="title-menu">Thème</span>
+                <span class="material-icons icon-menu">dark_mode</span>
+            </button>
+        </div>
+
+        <div id="parameters-content" class="content">
+            <div id="network-param" class="param-section is-open" data-document="network">
+                <div class="param">
+                    <label class="param-label" for="display-latency-network">Afficher latence réseau</label>
+                    <input type="checkbox" id="display-latency-network" name="display-latency-network" class="input-param" data-document="network" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="domain">Nom de domaine du server</label>
+                    <input type="text" id="domain" name="domain" class="input-param" data-document="network" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="delay">Délai de rafraichissement (en secondes)</label>
+                    <input type="number" min="1" id="delay" name="delay" class="input-param" data-document="network" />
+                </div>
+            </div>
+            <div id="date-param" class="param-section hidden">
+                <div class="param">
+                    <label class="param-label" for="display-date">Afficher la date</label>
+                    <input type="checkbox" id="display-date" name="display-date" class="input-param" data-document="date" />
+                </div>
+                <div class="param ml-15">
+                    <label class="param-label" for="display-year">Afficher l'année</label>
+                    <input type="checkbox" id="display-year" name="display-year" class="input-param" data-document="date" />
+                </div>
+                <div class="param ml-15">
+                    <label class="param-label" for="display-month">Afficher le mois</label>
+                    <input type="checkbox" id="display-month" name="display-month" class="input-param" data-document="date" />
+                </div>
+                <div class="param ml-15">
+                    <label class="param-label" for="display-day">afficher le jour</label>
+                    <input type="checkbox" id="display-day" name="display-day" class="input-param" data-document="date" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-time">Afficher le temps</label>
+                    <input type="checkbox" id="display-time" name="display-time" class="input-param" data-document="date" />
+                </div>
+                <div class="param ml-15">
+                    <label class="param-label" for="display-hours">Afficher les heures</label>
+                    <input type="checkbox" id="display-hours" name="display-hours" class="input-param" data-document="date" />
+                </div>
+                <div class="param ml-15">
+                    <label class="param-label" for="display-minutes">Afficher les minutes</label>
+                    <input type="checkbox" id="display-minutes" name="display-minutes" class="input-param" data-document="date" />
+                </div>
+                <div class="param ml-15">
+                    <label class="param-label" for="display-secondes">Afficher les secondes</label>
+                    <input type="checkbox" id="display-secondes" name="display-secondes" class="input-param" data-document="date" />
+                </div>
+            </div>
+            <div id="accessibility-param" class="param-section hidden" >
+                <div class="param">
+                    <label class="param-label" for="display-vibration-state">Afficher état vibration</label>
+                    <input type="checkbox" id="display-vibration-state" name="display-vibration-state" class="input-param" data-document="accessibility" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="active-vibration">Activer retour haptique de vibration</label>
+                    <input type="checkbox" id="active-vibration" name="active-vibration" class="input-param" data-document="accessibility" />
+                </div>
+                <div class="param">
+                    <label class="param-label" for="display-battery-state">Afficher état de la batterie</label>
+                    <input type="checkbox" id="display-battery-state" name="display-battery-state" class="input-param" data-document="accessibility" />
+                </div>
+            </div>
+            <div id="lock-param" class="param-section hidden" >
+                <div class="param">
+                    <label class="param-label" for="unlock-method">Méthode de verrouillage</label>
+                    <select id="unlock-method" class="input-param" data-document="lock">
+                        <option value="free">Aucun</option>
+                        <option value="password">Mot de passe</option>
+                        <option value="pattern">Schéma</option>
+                    </select>
+                </div>
+                <div class="param">
+                    <form id="lock-by-password" class="hidden lock-method">
+                        <input type="password" placeholder="Mot de passe" id="lock-password-input" class="input-param" data-document="lock">
+                        <button type="submit"><span class="material-icons md-18">done</span></button>
+                    </form>
+                </div>
+                <div class="param">
+                    <div id="lock-by-pattern" class="hidden lock-method ">
+                        <pattern-lock-component></pattern-lock-component>
+                    </div>
+                </div>
+                <p id="security-changed" class="hidden">
+                    <i class="material-icons">verified_user</i>
+                    <span>Changement de mot de passe effectué avec succès</span>
+                </p>
+            </div>
+            <div id="theme-param" class="param-section hidden">
+                <div class="param">
+                    <label class="param-label" for="theme-mode">Activer thème sombre</label>
+                    <select id="theme-mode" class="input-param theme" data-document="theme">
+                        <option value="auto">Auto</option>
+                        <option value="dark">Sombre</option>
+                        <option value="light">Clair</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="save-button">
+        <button id="save-parameters" class="btn btn-primary">Enregistrer</button>
     </div>
 </section>
 <script src="./parameters.js" type="module"></script>

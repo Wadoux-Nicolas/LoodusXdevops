@@ -3,6 +3,142 @@
 
 #parameters {
   @include theme() {
+    .modal-content {
+      display: flex;
+      flex-direction: row;
+    }
+    .menu {
+      width: 30%;
+    }
+
+    .title-menu {
+      display: block;
+    }
+
+    .icon-menu {
+      display: none;
+    }
+
+    .menu-button {
+      border: none;
+      background: themed('light-white');
+      color: black;
+      width: 100%;
+      height: 32px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .menu-button:last-child {
+      margin-bottom: 0;
+    }
+
+    .menu-button:hover {
+      background: themed('light-grey');
+      cursor: pointer;
+    }
+
+    .menu-button.active {
+      background: themed('primary');
+      color: themed('light-white');
+    }
+
+    .content {
+      width: 70%;
+      padding: 0 0 0 30px;
+    }
+
+    .param-label {
+      margin-right: 20px;
+    }
+
+    .param {
+      margin-bottom: 10px;
+    }
+
+    .is-open {
+      display: block;
+    }
+
+    #pattern-canvas {
+      background: themed('dark-white') !important;
+    }
+
+    .material-icons {
+      color: white;
+      vertical-align: middle;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      color: black;
+      padding: 2px 7px;
+      border-radius: 8px;
+      border: 1px solid themed('text-color');
+    }
+
+    input[type=number] {
+      color: black;
+      padding: 2px 7px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid themed('text-color');
+    }
+    button[type=submit] {
+      border-radius: 20px;
+      border: none;
+      background: themed('primary');
+      cursor: pointer;
+    }
+
+    button[type=submit]:hover {
+      border-radius: 20px;
+      border: 1px solid themed('text-color');
+      background: themed('primary');
+    }
+
+    #security-changed {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .save-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .modal-content {
+        flex-direction: column;
+      }
+      .menu {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
+
+      .title-menu {
+        display: none;
+      }
+
+      .icon-menu {
+        color: black;
+        display: block;
+
+      }
+      .menu-button.active .icon-menu{
+        color: themed('light-white');
+      }
+
+      .content {
+        width: 100%;
+        padding: 0;
+      }
+    }
 
   }
 }
