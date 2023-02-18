@@ -57,10 +57,13 @@ class Home extends HTMLElement {
     displayClock() {
         // Delay clock animation
         const now = new Date();
+        const seconds = now.getSeconds();
+        const minutes = now.getMinutes() * 60 + seconds;
+        const hours = now.getHours() * 60 * 60 + minutes;
 
-        this.setTime(now.getSeconds(), "second");
-        this.setTime(now.getMinutes() * 60, "minute");
-        this.setTime(now.getHours() * 60 * 60, "hour");
+        this.setTime(seconds, "second");
+        this.setTime(minutes, "minute");
+        this.setTime(hours, "hour");
     }
 
     setTime(left, hand) {
