@@ -185,18 +185,18 @@ class Calculator extends HTMLElement {
                     // If last number is signed (plus or minus), replace the sign
                     let operator = this.operation[i] === '-' ? '+' : '-';
                     if (i === 0) {
-                        // we don't show a plus sign at the beginning of the operation
+                        // we don't show a plus sign at the beginning of the operation (always catch when its a - become +)
                         operator = '';
                     }
 
                     result = this.operation.slice(0, i) + operator + this.operation.slice(i + 1);
                 } else {
-                    // if no sign, simply add a minus
+                    // if no sign, simply add a minus, for example 1+2*3-4*5 => 1+2*3-4*-5
                     result = this.operation.slice(0, i + 1) + '-' + this.operation.slice(i + 1);
                 }
                 break;
             } else if (i === 0) {
-                // if no sign, simply add a minus
+                // if at last element and no sign, simply add a minus
                 result = '-' + this.operation;
                 break;
             }

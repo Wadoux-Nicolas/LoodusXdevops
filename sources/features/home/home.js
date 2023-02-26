@@ -59,7 +59,7 @@ class Home extends HTMLElement {
         const now = new Date();
         const seconds = now.getSeconds();
         const minutes = now.getMinutes() * 60 + seconds;
-        const hours = now.getHours() * 60 * 60 + minutes;
+        const hours = now.getHours() * 60 * 60 + minutes; // hours in seconds, cause animation-delay is in seconds
 
         this.setTime(seconds, "second");
         this.setTime(minutes, "minute");
