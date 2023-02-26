@@ -11,6 +11,8 @@
 docker-compose up --detach
 ```
 
+Go on [http://localhost:8000](http://localhost:8000) to see the magic (install and start the dev server are done when building the container)
+
 ### Node Packages Installation (already done when building container)
 
 ```bash
@@ -23,7 +25,6 @@ docker-compose exec node npm install
 docker-compose exec node npm start
 ```
 
-Go on [http://localhost:8000](http://localhost:8000) to see the magic
 
 ### Create a new feature or component
 
