@@ -48,3 +48,8 @@ docker-compose down --remove-orphans --volumes --timeout 0
 
 When merging in master, a new version is automatically built and deployed on [https://loodus.nicolas-wadoux.fr](https://loodus.nicolas-wadoux.fr)
 (Check the github action to know when it's done)
+
+
+## Figma
+
+https://www.figma.com/file/3ZrsP9NTukjtrBUzhBkO9P/Maquette?node-id=0%3A1&t=ET9lkuueq4jvLNTX-1
