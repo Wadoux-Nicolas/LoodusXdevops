@@ -104,9 +104,10 @@ class PatternLock extends HTMLElement {
             if(circle.checkIfClicked(event.offsetX, event.offsetY) && !this.selectedPattern.includes(circle.value)) {
                 this.selectedPattern.push(circle.value);
                 circle.markAsSelected();
-                if(this.selectedPattern.length >= 9) {
-                    this.submitPattern();
-                }
+                // finally no need of this part, as we can submit the pattern when the user releases the mouse
+                // if(this.selectedPattern.length >= 9) {
+                //     this.submitPattern();
+                // }
             }
         }
     }
